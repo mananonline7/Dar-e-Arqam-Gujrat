@@ -1,0 +1,90 @@
+/* =========================================================
+   REGIONAL ACTIVITIES — clean, light, page-native styling.
+   Reuses the site's own .hero2/.section/.section-head system;
+   this file only adds what's specific to the activity blocks
+   and their photo galleries. Deliberately restrained — fade-in
+   on scroll (via the shared .reveal class) and a gentle image
+   hover are the only animations here.
+   ========================================================= */
+
+/* intro strip right under the hero */
+.ra-intro { max-width: 760px; margin: 0 auto; text-align: center; }
+.ra-intro p { color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.12rem); line-height: 1.85; }
+
+/* on-page quick nav, plain pill row */
+.ra-jump { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 900px; margin: clamp(28px, 4vw, 40px) auto 0; }
+.ra-jump a {
+  font-size: 0.82rem; font-weight: 600; color: var(--blue-500); text-decoration: none;
+  padding: 8px 16px; border-radius: 999px; background: #fff; border: 1px solid var(--paper-2);
+  box-shadow: 0 6px 16px rgba(0, 61, 91, 0.06); transition: 0.3s var(--ease);
+}
+.ra-jump a:hover { background: var(--blue); color: #fff; border-color: var(--blue); transform: translateY(-2px); }
+
+/* ---------- one activity block per subfolder ---------- */
+.ra-activity {
+  max-width: 1080px; margin: 0 auto; padding: clamp(40px, 6vw, 64px) 0;
+  border-top: 1px solid var(--paper-2);
+}
+.ra-activity:first-of-type { border-top: none; padding-top: 0; }
+
+.ra-activity-head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 14px; }
+.ra-tag {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+  background: var(--ra-accent, var(--blue)); padding: 7px 16px; border-radius: 999px;
+}
+.ra-tag svg { width: 14px; height: 14px; }
+.ra-date { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+
+.ra-activity h2 {
+  font-family: var(--font-display); font-weight: 600; line-height: 1.18;
+  font-size: clamp(1.5rem, 3vw, 2.05rem); color: var(--blue); margin-bottom: 12px;
+}
+.ra-activity p.ra-copy { color: var(--muted); font-size: 1rem; line-height: 1.85; max-width: 74ch; margin-bottom: clamp(26px, 3.5vw, 36px); }
+
+/* ---------- photo gallery: neat, even, restrained ---------- */
+.ra-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.ra-photo {
+  position: relative; background: #fff; border-radius: 14px; overflow: hidden; cursor: zoom-in;
+  border: 1px solid var(--paper-2); box-shadow: 0 8px 18px rgba(0, 61, 91, 0.07);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.ra-photo:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(0, 61, 91, 0.14); }
+.ra-photo-img { aspect-ratio: 4/3; overflow: hidden; }
+.ra-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease); }
+.ra-photo:hover img { transform: scale(1.06); }
+.ra-photo figcaption { padding: 10px 12px 12px; font-size: 0.78rem; color: var(--ink); font-weight: 500; line-height: 1.4; }
+
+@media (max-width: 900px) { .ra-gallery { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .ra-gallery { grid-template-columns: 1fr; } .ra-activity-head { gap: 10px; } }
+
+/* ---------- lightbox (same generic pattern used elsewhere) ---------- */
+.ra-lightbox {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
+  background: rgba(1, 14, 22, 0.86); opacity: 0; visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease); padding: 20px;
+}
+.ra-lightbox.open { opacity: 1; visibility: visible; }
+.ra-lb-figure { position: relative; max-width: min(1000px, 92vw); max-height: 88vh; }
+.ra-lb-figure img { max-width: 100%; max-height: 80vh; display: block; border-radius: 10px; margin: 0 auto; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5); }
+.ra-lb-cap { color: #fff; text-align: center; margin-top: 14px; font-size: 0.92rem; }
+.ra-lb-cap span { display: block; margin-top: 3px; font-size: 0.78rem; color: rgba(255, 255, 255, 0.68); }
+.ra-lb-close {
+  position: absolute; top: -50px; right: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer;
+}
+.ra-lb-close:hover { background: var(--blue); }
+.ra-lb-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer; z-index: 4;
+}
+.ra-lb-btn:hover { background: var(--blue); }
+.ra-lb-btn.prev { left: -66px; }
+.ra-lb-btn.next { right: -66px; }
+@media (max-width: 1100px) {
+  .ra-lb-btn.prev { left: 6px; }
+  .ra-lb-btn.next { right: 6px; }
+  .ra-lb-btn { background: rgba(1, 14, 22, 0.55); }
+}

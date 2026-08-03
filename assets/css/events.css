@@ -1,0 +1,821 @@
+/* =========================================================
+   EVENTS — ceremonial maroon / crimson / gold theme
+   Layered on styles.css (header, footer, .reveal, .btn, .container)
+
+   Palette is sampled from the school's own Ashra Seerat banner:
+   deep wine ground, gold calligraphy, amber arabesque ornament.
+   Everything is scoped under body.ev so no other page is touched.
+
+   ---------------------------------------------------------
+   ADDING A NEW EVENT LATER
+   Each event is one <section class="ev-event"> block. It reads
+   four local custom properties, so a new event only needs its
+   own accent colours to feel distinct while staying in-family:
+
+     <section class="ev-event" style="
+        --e-dark:#123; --e-mid:#245; --e-accent:#e8b56a; --e-soft:#f3f7fb;">
+
+   Defaults below fall back to the Seerat wine/gold set. Layout,
+   animation and typography are inherited — no new CSS required.
+   ========================================================= */
+
+.ev {
+  --ev-wine:      #48101f;
+  --ev-wine-deep: #300a15;
+  --ev-maroon:    #6b1226;
+  --ev-red:       #8d1c2e;
+  --ev-crimson:   #a82a38;
+  --ev-gold:      #e8b56a;
+  --ev-gold-lt:   #f7d9a0;
+  --ev-gold-dp:   #b8791f;
+  --ev-cream:     #fdf7ee;
+  --ev-cream-2:   #f7ece0;
+  --ev-ink:       #2c1219;
+  --ev-muted:     #78555e;
+  --ev-line:      rgba(107, 18, 38, 0.14);
+
+  /* per-event overridables (see header note) */
+  --e-dark:   var(--ev-wine);
+  --e-mid:    var(--ev-maroon);
+  --e-accent: var(--ev-gold);
+  --e-soft:   var(--ev-cream);
+}
+
+/* keep fixed chrome working under this page's stacking context */
+.ev > *:not(.site-header):not(.nav-backdrop):not(.to-top):not(.ev-lightbox) {
+  position: relative;
+  z-index: 2;
+}
+/* the hero is dark, so give the transparent header a scrim for contrast */
+.ev .site-header:not(.scrolled) {
+  background: linear-gradient(180deg, rgba(48, 10, 21, 0.78) 0%, rgba(48, 10, 21, 0.36) 72%, transparent 100%);
+}
+
+/* ---------- shared ornament: 8-point Islamic star ---------- */
+.ev-star {
+  width: 14px; height: 14px; flex: none; background: var(--e-accent);
+  clip-path: polygon(50% 0%, 61% 26%, 87% 13%, 74% 39%, 100% 50%, 74% 61%, 87% 87%,
+                     61% 74%, 50% 100%, 39% 74%, 13% 87%, 26% 61%, 0% 50%, 26% 39%, 13% 13%, 39% 26%);
+}
+
+/* ---------- glowing decorative divider ---------- */
+.ev-rule { display: flex; align-items: center; justify-content: center; gap: 16px; padding: clamp(24px, 4vw, 44px) 0; }
+.ev-rule i {
+  height: 1px; width: clamp(36px, 15vw, 190px);
+  background: linear-gradient(90deg, transparent, var(--e-accent));
+}
+.ev-rule i:last-child { background: linear-gradient(90deg, var(--e-accent), transparent); }
+.ev-rule .ev-star { box-shadow: 0 0 18px var(--e-accent); animation: evTwinkle 4s ease-in-out infinite; }
+@keyframes evTwinkle { 0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.85; } 50% { transform: rotate(45deg) scale(1.18); opacity: 1; } }
+
+/* =========================================================
+   HERO — ceremonial, layered, dramatic
+   ========================================================= */
+.ev-hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden;
+  padding: calc(var(--header-h) + 48px) 0 72px; color: #fff;
+  background: linear-gradient(125deg, var(--ev-wine-deep) 0%, var(--ev-wine) 26%, var(--ev-maroon) 52%, var(--ev-red) 74%, var(--ev-crimson) 100%);
+  background-size: 240% 240%;
+  animation: evGrad 26s ease infinite;
+}
+@keyframes evGrad { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+/* soft glowing light pools */
+.ev-glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(16px); mix-blend-mode: screen; }
+.ev-glow.g1 { width: 540px; height: 540px; left: -130px; top: -120px; background: radial-gradient(circle, rgba(232,181,106,0.34), transparent 68%); animation: evDrift 19s ease-in-out infinite; }
+.ev-glow.g2 { width: 460px; height: 460px; right: -60px; bottom: -140px; background: radial-gradient(circle, rgba(255,120,110,0.3), transparent 66%); animation: evDrift 24s ease-in-out infinite reverse; }
+.ev-glow.g3 { width: 320px; height: 320px; left: 44%; top: -70px; background: radial-gradient(circle, rgba(255,232,190,0.24), transparent 68%); animation: evDrift 21s ease-in-out infinite; }
+@keyframes evDrift {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(46px, 32px) scale(1.1); }
+  66% { transform: translate(-32px, 22px) scale(0.92); }
+}
+
+/* radiating ceremonial light behind the collage */
+.ev-rays {
+  position: absolute; right: -6%; top: 50%; width: 940px; height: 940px; transform: translateY(-50%);
+  pointer-events: none; opacity: 0.36;
+  background: repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(232,181,106,0.13) 0deg 4deg, transparent 4deg 15deg);
+  -webkit-mask: radial-gradient(circle, #000 8%, transparent 60%);
+  mask: radial-gradient(circle, #000 8%, transparent 60%);
+  animation: spin 110s linear infinite;
+}
+
+/* arabesque lattice wash */
+.ev-lattice {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.13;
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 7px, rgba(232,181,106,0.5) 7.4px, transparent 8.4px),
+    radial-gradient(circle at 0% 50%,  transparent 7px, rgba(232,181,106,0.32) 7.4px, transparent 8.4px),
+    radial-gradient(circle at 100% 50%, transparent 7px, rgba(232,181,106,0.32) 7.4px, transparent 8.4px);
+  background-size: 46px 46px;
+}
+
+/* floating gold motes */
+.ev-motes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ev-motes i {
+  position: absolute; border-radius: 50%; background: var(--ev-gold-lt);
+  opacity: 0; animation: evRise linear infinite;
+}
+@keyframes evRise {
+  0% { opacity: 0; transform: translateY(30px) scale(0.5); }
+  16% { opacity: 0.85; }
+  70% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-88vh) scale(1.1); }
+}
+
+.ev-hero .container {
+  position: relative; z-index: 6; display: grid; grid-template-columns: 1.02fr 0.98fr;
+  gap: clamp(30px, 5vw, 62px); align-items: center; width: 100%;
+}
+
+.ev-eyebrow {
+  display: inline-flex; align-items: center; gap: 11px; font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--ev-gold-lt);
+  padding: 9px 20px; border-radius: 999px; background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(232, 181, 106, 0.42); backdrop-filter: blur(4px);
+  opacity: 0; animation: heroIn 0.8s var(--ease) 0.15s forwards;
+}
+
+.ev-hero h1 {
+  font-family: var(--font-display); font-weight: 600; line-height: 1.07;
+  font-size: clamp(2.05rem, 4.7vw, 3.55rem); margin: 20px 0 20px;
+}
+.ev-hero h1 .word {
+  display: inline-block; opacity: 0; transform: translateY(30px); filter: blur(7px);
+  animation: evWordIn 0.95s var(--ease) forwards;
+}
+@keyframes evWordIn { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+/* gold accent words stay light-on-dark, so contrast holds */
+.ev-hero h1 .gold { color: var(--ev-gold-lt); }
+
+.ev-hero-sub {
+  font-size: clamp(1rem, 1.6vw, 1.14rem); line-height: 1.85; color: rgba(255, 245, 238, 0.86);
+  max-width: 58ch; margin-bottom: 30px;
+  opacity: 0; animation: heroIn 0.9s var(--ease) 1.15s forwards;
+}
+.ev-hero .hero-actions { opacity: 0; animation: heroIn 0.9s var(--ease) 1.35s forwards; }
+.ev-hero .btn.ghost { border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+.ev-hero .btn.ghost:hover { background: rgba(255, 255, 255, 0.14); border-color: var(--ev-gold); }
+
+/* hero meta strip */
+/* ---------- slow cross-fading photo backdrop ----------
+   Sits between the section's own animated gradient and the atmospheric
+   glow/ray/mote layers, so campus photography reads through a maroon
+   tint rather than competing with the foreground copy or collage. */
+.ev-hero-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+.ev-hero-bg-slide {
+  position: absolute; inset: 0; opacity: 0;
+  animation: evBgFade 24s ease-in-out infinite;
+}
+.ev-hero-bg-slide img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) brightness(0.6); }
+.ev-hero-bg-slide:nth-child(1) { animation-delay: 0s; }
+.ev-hero-bg-slide:nth-child(2) { animation-delay: 6s; }
+.ev-hero-bg-slide:nth-child(3) { animation-delay: 12s; }
+.ev-hero-bg-slide:nth-child(4) { animation-delay: 18s; }
+@keyframes evBgFade {
+  0%, 100% { opacity: 0; }
+  4% { opacity: 0.4; }
+  21% { opacity: 0.4; }
+  25% { opacity: 0; }
+}
+.ev-hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(125deg, rgba(48,10,21,0.88) 0%, rgba(107,18,38,0.7) 50%, rgba(141,28,46,0.86) 100%);
+}
+
+.ev-hero-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px;
+  opacity: 0; animation: heroIn 0.9s var(--ease) 1.55s forwards;
+}
+.ev-hm {
+  display: inline-flex; align-items: center; gap: 9px; font-size: 0.82rem; font-weight: 600;
+  color: rgba(255, 245, 238, 0.9); padding: 9px 16px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: 0.35s var(--ease);
+}
+.ev-hm:hover { background: rgba(232, 181, 106, 0.18); border-color: rgba(232, 181, 106, 0.5); transform: translateY(-3px); }
+.ev-hm .ev-star { width: 11px; height: 11px; }
+
+/* ---------- hero collage: four layered, framed shots ---------- */
+.ev-collage { position: relative; height: min(600px, 76vh); }
+.ev-shot {
+  position: absolute; border-radius: 20px; overflow: hidden; opacity: 0;
+  border: 5px solid rgba(255, 250, 244, 0.92);
+  box-shadow: 0 30px 62px rgba(24, 4, 10, 0.6);
+  animation: evShotIn 1.15s var(--ease) forwards; will-change: transform;
+}
+@keyframes evShotIn { from { opacity: 0; transform: translateY(46px) scale(0.92) rotate(0deg); } }
+.ev-shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease); }
+.ev-shot:hover { z-index: 9 !important; }
+.ev-shot:hover img { transform: scale(1.09); }
+
+.ev-shot.s1 { width: 62%; height: 50%; right: 0;    top: 0;     z-index: 4; animation-delay: 0.7s;  transform: rotate(2.4deg); }
+.ev-shot.s2 { width: 52%; height: 44%; left: 0;     top: 16%;   z-index: 5; animation-delay: 0.9s;  transform: rotate(-3.2deg); }
+.ev-shot.s3 { width: 46%; height: 38%; right: 8%;   bottom: 2%; z-index: 6; animation-delay: 1.1s;  transform: rotate(-1.8deg); }
+.ev-shot.s4 { width: 38%; height: 32%; left: 6%;    bottom: 6%; z-index: 7; animation-delay: 1.3s;  transform: rotate(3.6deg); }
+/* keep the tilt after the entry animation finishes */
+.ev-shot.s1:hover { transform: rotate(0deg) translateY(-6px); }
+.ev-shot.s2:hover { transform: rotate(0deg) translateY(-6px); }
+.ev-shot.s3:hover { transform: rotate(0deg) translateY(-6px); }
+.ev-shot.s4:hover { transform: rotate(0deg) translateY(-6px); }
+
+.ev-collage .ev-seal {
+  position: absolute; z-index: 8; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 96px; height: 96px; border-radius: 50%; display: grid; place-content: center;
+  background: linear-gradient(150deg, var(--ev-gold-lt), var(--ev-gold-dp));
+  color: var(--ev-wine); box-shadow: 0 16px 40px rgba(24, 4, 10, 0.6), 0 0 0 8px rgba(255, 250, 244, 0.14);
+  font-family: var(--font-display); font-size: 0.72rem; font-weight: 700; text-align: center;
+  line-height: 1.25; letter-spacing: 0.04em; padding: 8px;
+  opacity: 0; animation: heroIn 0.9s var(--ease) 1.6s forwards;
+}
+.ev-collage .ev-ring-dash {
+  position: absolute; z-index: 1; left: 50%; top: 50%; width: 300px; height: 300px;
+  margin: -150px 0 0 -150px; border: 2px dashed rgba(255, 245, 238, 0.26); border-radius: 50%;
+  animation: spin 44s linear infinite;
+}
+
+@media (max-width: 1024px) {
+  .ev-hero .container { grid-template-columns: 1fr; gap: 44px; }
+  .ev-collage { height: 440px; max-width: 620px; width: 100%; margin-inline: auto; }
+}
+@media (max-width: 560px) {
+  .ev-hero { min-height: 0; }
+  .ev-collage { height: 330px; }
+  .ev-shot { border-width: 4px; border-radius: 15px; }
+  .ev-collage .ev-seal { width: 74px; height: 74px; font-size: 0.6rem; }
+  .ev-collage .ev-ring-dash { width: 200px; height: 200px; margin: -100px 0 0 -100px; }
+}
+
+/* =========================================================
+   EVENT INDEX RAIL — scales as events are added
+   ========================================================= */
+.ev-index { background: var(--ev-wine-deep); padding: 26px 0; overflow: hidden; }
+.ev-index .container { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.ev-index-label {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ev-gold); white-space: nowrap;
+}
+.ev-index-list { display: flex; gap: 10px; flex-wrap: wrap; }
+.ev-index-list a {
+  display: inline-flex; align-items: center; gap: 9px; font-size: 0.85rem; font-weight: 600;
+  color: rgba(255, 245, 238, 0.82); padding: 9px 18px; border-radius: 999px;
+  border: 1px solid rgba(255, 245, 238, 0.18); transition: 0.35s var(--ease);
+}
+.ev-index-list a:hover { color: var(--ev-wine); background: var(--ev-gold); border-color: var(--ev-gold); transform: translateY(-2px); }
+.ev-index-list a.soon { opacity: 0.5; cursor: default; }
+.ev-index-list a.soon:hover { transform: none; color: rgba(255, 245, 238, 0.82); background: none; border-color: rgba(255, 245, 238, 0.18); }
+
+/* =========================================================
+   EVENT SECTION — the repeatable block
+   ========================================================= */
+.ev-event { position: relative; overflow: hidden; background: var(--e-soft); }
+
+/* poster/banner band that opens each event */
+.ev-band { position: relative; overflow: hidden; }
+.ev-band img { width: 100%; display: block; min-height: 190px; object-fit: cover; object-position: center; }
+.ev-band::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(48,10,21,0.32) 0%, transparent 34%, transparent 62%, var(--e-soft) 100%);
+}
+.ev-band-cap {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 16%; text-align: center;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--ev-gold-lt); text-shadow: 0 2px 14px rgba(24, 4, 10, 0.8);
+}
+@media (max-width: 700px) { .ev-band img { min-height: 130px; } .ev-band-cap { display: none; } }
+
+/* ---------- ev-crest: an illustrated ceremonial header, no photo ----------
+   Alternative to .ev-band for an event with no suitable banner photograph —
+   a laurel-and-medal composition built entirely from CSS/SVG, in the
+   section's own --e-dark/--e-mid/--e-accent so it reads as an emblem
+   rather than a re-used poster. */
+.ev-crest {
+  position: relative; overflow: hidden; text-align: center;
+  padding: clamp(56px, 8vw, 96px) 0 clamp(40px, 6vw, 66px);
+  background: linear-gradient(180deg, var(--e-dark) 0%, var(--e-mid) 130%);
+}
+.ev-crest::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.5; pointer-events: none;
+  background-image: repeating-linear-gradient(115deg, rgba(217, 164, 65, 0.08) 0 1px, transparent 1px 46px);
+}
+.ev-crest-beam {
+  position: absolute; left: 50%; top: -12%; width: 540px; height: 540px; transform: translateX(-50%);
+  pointer-events: none; opacity: 0.7;
+  background: conic-gradient(from 0deg at 50% 50%, rgba(217, 164, 65, 0.16) 0deg 6deg, transparent 6deg 20deg);
+  -webkit-mask: radial-gradient(circle, #000 15%, transparent 62%);
+  mask: radial-gradient(circle, #000 15%, transparent 62%);
+  animation: spin 70s linear infinite;
+}
+.ev-crest-row { position: relative; z-index: 3; display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 34px); }
+
+.ev-crest-laurel { display: inline-flex; }
+.ev-crest-laurel.right { transform: scaleX(-1); }
+.ev-crest-laurel svg {
+  width: clamp(46px, 7vw, 72px); height: auto; transform-origin: bottom center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+  animation: evLaurelSway 5s ease-in-out infinite;
+}
+.ev-crest-laurel.right svg { animation-delay: 0.4s; }
+@keyframes evLaurelSway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+
+.ev-crest-medal {
+  position: relative; z-index: 2; flex: none; width: clamp(78px, 10vw, 108px); height: clamp(78px, 10vw, 108px);
+  border-radius: 50%; display: grid; place-content: center;
+  background: radial-gradient(circle at 35% 30%, var(--ev-gold-lt), var(--e-accent) 55%, var(--ev-gold-dp) 100%);
+  box-shadow: 0 0 0 6px rgba(217, 164, 65, 0.18), 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+.ev-crest-medal svg { width: 44%; height: 44%; color: var(--e-dark); }
+.ev-crest-medal::after {
+  content: ""; position: absolute; inset: -14px; border-radius: 50%; border: 2px solid rgba(217, 164, 65, 0.5);
+  animation: evSpotPulse 3.4s ease-in-out infinite;
+}
+.ev-crest-rule {
+  position: relative; z-index: 3; display: block; width: 120px; height: 2px;
+  margin: clamp(20px, 3vw, 30px) auto 0; background: linear-gradient(90deg, transparent, var(--e-accent), transparent);
+}
+.ev-crest-rule::after {
+  content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 8px; height: 8px; border-radius: 50%; background: var(--e-accent); box-shadow: 0 0 14px var(--e-accent);
+}
+@media (max-width: 480px) {
+  .ev-crest-laurel svg { width: 38px; }
+  .ev-crest-medal { width: 70px; height: 70px; }
+}
+
+.ev-body { padding: clamp(40px, 6vw, 84px) 0 clamp(58px, 8vw, 110px); }
+
+/* event masthead */
+.ev-mast { text-align: center; max-width: 940px; margin: 0 auto clamp(30px, 4vw, 48px); }
+.ev-chip {
+  display: inline-flex; align-items: center; gap: 9px; font-size: 0.68rem; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(100deg, var(--e-dark), var(--e-mid)); padding: 8px 18px; border-radius: 999px;
+}
+.ev-title-ur {
+  font-family: "Noto Nastaliq Urdu", var(--font-ar), serif;
+  font-size: clamp(1.7rem, 4.6vw, 3.1rem); line-height: 2.1; color: var(--e-dark);
+  margin: 26px 0 6px; direction: rtl;
+}
+.ev-title-en {
+  font-family: var(--font-display); font-weight: 600; line-height: 1.16;
+  font-size: clamp(1.4rem, 2.9vw, 2.15rem); color: var(--e-mid); margin-bottom: 16px;
+}
+/* used instead of .ev-title-ur when an event has no Urdu display name —
+   its own large display heading, sized and weighted to lead the masthead */
+.ev-title-main {
+  font-family: var(--font-display); font-weight: 700; line-height: 1.1;
+  font-size: clamp(2rem, 5vw, 3.4rem); color: var(--e-dark); margin: 22px 0 8px;
+}
+.ev-theme-line {
+  display: inline-block; font-family: "Noto Nastaliq Urdu", var(--font-ar), serif;
+  font-size: clamp(0.98rem, 2vw, 1.32rem); line-height: 2.4; direction: rtl;
+  color: var(--e-dark);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--e-accent) 26%, transparent), color-mix(in srgb, var(--e-accent) 8%, transparent));
+  border: 1px solid color-mix(in srgb, var(--e-accent) 55%, var(--e-mid));
+  border-radius: 14px; padding: 10px clamp(18px, 3vw, 32px); margin-top: 6px;
+}
+/* an event with no Urdu quote uses this for its (LTR) English motto instead */
+.ev-theme-line.ltr { direction: ltr; font-family: var(--font-display); font-style: italic; font-weight: 500; line-height: 1.6; }
+.ev-theme-en { font-size: 0.86rem; color: var(--ev-muted); font-style: italic; margin-top: 12px; }
+
+/* narrative copy */
+.ev-story { max-width: 820px; margin: 0 auto; }
+.ev-story p { color: var(--ev-ink); font-size: clamp(1rem, 1.4vw, 1.08rem); line-height: 1.95; margin-bottom: 18px; }
+.ev-story p.lead { font-size: clamp(1.06rem, 1.7vw, 1.2rem); color: var(--e-dark); font-weight: 500; }
+.ev-story .ur {
+  font-family: "Noto Nastaliq Urdu", var(--font-ar), serif; direction: rtl; text-align: right;
+  line-height: 2.5; font-size: clamp(0.98rem, 1.7vw, 1.12rem); color: var(--ev-ink);
+  background: rgba(255, 255, 255, 0.7); border-right: 4px solid var(--e-accent);
+  border-radius: 12px; padding: 22px clamp(18px, 3vw, 30px); margin: 26px 0;
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--e-dark) 7%, transparent);
+}
+
+/* ---------- feature: one large hero image per event ---------- */
+.ev-feature { position: relative; margin: clamp(36px, 5vw, 60px) auto 0; max-width: 1080px; }
+.ev-feature-frame {
+  position: relative; border-radius: clamp(18px, 3vw, 28px); overflow: hidden;
+  box-shadow: 0 34px 70px color-mix(in srgb, var(--e-dark) 30%, transparent); border: 6px solid #fff;
+}
+.ev-feature-frame img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; transition: transform 1.2s var(--ease); }
+.ev-feature-frame:hover img { transform: scale(1.06); }
+.ev-feature-frame::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 46%, color-mix(in srgb, var(--e-dark) 86%, transparent) 100%);
+}
+.ev-feature-cap {
+  position: absolute; z-index: 3; left: clamp(18px, 4vw, 42px); right: clamp(18px, 4vw, 42px); bottom: clamp(16px, 3vw, 34px);
+  color: #fff;
+}
+.ev-feature-cap b { display: block; font-family: var(--font-display); font-size: clamp(1.05rem, 2.2vw, 1.6rem); font-weight: 600; margin-bottom: 4px; }
+.ev-feature-cap span { font-size: 0.86rem; color: rgba(255, 245, 238, 0.8); }
+.ev-feature .ev-corner {
+  position: absolute; width: 62px; height: 62px; border: 3px solid var(--e-accent); z-index: 4; pointer-events: none;
+}
+.ev-feature .ev-corner.tl { left: -14px; top: -14px; border-right: none; border-bottom: none; border-top-left-radius: 16px; }
+.ev-feature .ev-corner.br { right: -14px; bottom: -14px; border-left: none; border-top: none; border-bottom-right-radius: 16px; }
+
+/* ---------- activities grid ---------- */
+.ev-acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; margin-top: clamp(34px, 5vw, 56px); }
+.ev-act {
+  position: relative; background: #fff; border-radius: 20px; padding: 30px 26px 28px;
+  border: 1px solid color-mix(in srgb, var(--e-dark) 10%, transparent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--e-dark) 8%, transparent);
+  overflow: hidden; transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.4s;
+}
+.ev-act::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--e-dark), var(--e-accent));
+}
+.ev-act::after {
+  content: ""; position: absolute; right: -46px; bottom: -46px; width: 150px; height: 150px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--e-accent) 24%, transparent), transparent 68%);
+  transition: transform 0.6s var(--ease);
+}
+.ev-act:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 56px color-mix(in srgb, var(--e-dark) 20%, transparent);
+  border-color: color-mix(in srgb, var(--e-accent) 50%, transparent);
+}
+.ev-act:hover::after { transform: scale(1.6); }
+.ev-act-ico {
+  width: 54px; height: 54px; border-radius: 15px; display: grid; place-content: center; margin-bottom: 18px;
+  background: linear-gradient(150deg, var(--e-dark), var(--e-mid)); color: #fff;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--e-dark) 26%, transparent); transition: 0.45s var(--ease);
+}
+.ev-act:hover .ev-act-ico {
+  transform: rotate(-8deg) scale(1.07);
+  background: linear-gradient(150deg, var(--e-accent), color-mix(in srgb, var(--e-accent) 55%, var(--e-mid)));
+  color: var(--e-dark);
+}
+.ev-act-ico svg { width: 25px; height: 25px; }
+.ev-act h4 { font-family: var(--font-display); font-size: 1.15rem; color: var(--e-dark); margin-bottom: 9px; font-weight: 600; }
+.ev-act p { color: var(--ev-muted); font-size: 0.93rem; line-height: 1.75; }
+.ev-act .ur-tag {
+  display: block; margin-top: 12px; font-family: "Noto Nastaliq Urdu", var(--font-ar), serif;
+  direction: rtl; font-size: 0.92rem; line-height: 2; color: var(--e-mid);
+}
+
+/* ---------- award badges: recognitions of the year ---------- */
+.ev-badges { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; max-width: 940px; margin: clamp(28px, 4vw, 44px) auto 0; }
+.ev-badge {
+  position: relative; display: inline-flex; align-items: center; gap: 11px;
+  padding: 11px 20px 11px 12px; border-radius: 999px; background: #fff;
+  border: 1.5px solid color-mix(in srgb, var(--e-accent) 40%, transparent);
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--e-dark) 10%, transparent);
+  font-weight: 600; font-size: 0.88rem; color: var(--e-dark); overflow: hidden;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s;
+}
+.ev-badge:hover { transform: translateY(-4px); box-shadow: 0 22px 44px color-mix(in srgb, var(--e-dark) 18%, transparent); border-color: var(--e-accent); }
+.ev-badge-ico {
+  width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-content: center;
+  background: linear-gradient(150deg, var(--e-accent), var(--e-mid)); color: #fff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-accent) 26%, transparent);
+}
+.ev-badge-ico svg { width: 15px; height: 15px; }
+.ev-badge:hover .ev-badge-ico { animation: evBadgePulse 1.1s ease-in-out infinite; }
+@keyframes evBadgePulse {
+  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--e-accent) 26%, transparent); }
+  50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--e-accent) 5%, transparent); }
+}
+
+/* ---------- trophy spotlight: the winner's cup as a symbol ---------- */
+.ev-spotlight {
+  display: flex; flex-wrap: wrap; align-items: center; gap: clamp(28px, 4vw, 54px);
+  max-width: 980px; margin: clamp(40px, 6vw, 64px) auto 0; background: #fff;
+  border-radius: clamp(20px, 3vw, 28px); padding: clamp(26px, 4vw, 42px);
+  box-shadow: 0 30px 64px color-mix(in srgb, var(--e-dark) 16%, transparent); position: relative; overflow: hidden;
+}
+.ev-spotlight::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--e-accent) 12%, transparent), transparent 60%);
+}
+.ev-spotlight-media { position: relative; flex: 0 0 auto; width: min(260px, 40%); aspect-ratio: 3/2; border-radius: 18px; }
+.ev-spotlight-media img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; position: relative; z-index: 2; }
+.ev-spotlight-ring {
+  position: absolute; inset: -9px; border-radius: 24px; border: 2px solid var(--e-accent); z-index: 1;
+  animation: evSpotPulse 3.4s ease-in-out infinite;
+}
+@keyframes evSpotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; box-shadow: 0 0 0 0 color-mix(in srgb, var(--e-accent) 30%, transparent); }
+  50% { transform: scale(1.045); opacity: 0.95; box-shadow: 0 0 28px 5px color-mix(in srgb, var(--e-accent) 30%, transparent); }
+}
+.ev-spotlight-copy { flex: 1 1 260px; min-width: 0; }
+.ev-spotlight-copy h3 { font-family: var(--font-display); font-size: clamp(1.15rem, 2.1vw, 1.5rem); color: var(--e-dark); font-weight: 600; margin: 14px 0 10px; }
+.ev-spotlight-copy p { color: var(--ev-muted); line-height: 1.85; font-size: 0.97rem; }
+@media (max-width: 640px) {
+  .ev-spotlight { flex-direction: column; text-align: center; }
+  .ev-spotlight-media { width: min(320px, 80%); }
+}
+
+/* ---------- photo mosaic + lightbox triggers ---------- */
+.ev-mosaic {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 176px; gap: 16px;
+  margin-top: clamp(34px, 5vw, 56px);
+}
+.ev-tile {
+  position: relative; border-radius: 16px; overflow: hidden; cursor: zoom-in;
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--e-dark) 16%, transparent);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.ev-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease); }
+.ev-tile::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 44%, color-mix(in srgb, var(--e-dark) 88%, transparent));
+  opacity: 0.94; transition: opacity 0.4s;
+}
+.ev-tile figcaption {
+  position: absolute; z-index: 3; left: 15px; right: 15px; bottom: 13px; color: #fff;
+  font-size: 0.84rem; font-weight: 700; line-height: 1.35;
+}
+.ev-tile figcaption small { display: block; font-weight: 500; font-size: 0.72rem; color: rgba(255, 245, 238, 0.76); margin-top: 2px; }
+.ev-tile .ev-zoom {
+  position: absolute; z-index: 4; right: 12px; top: 12px; width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255, 250, 244, 0.94); color: var(--e-dark); display: grid; place-content: center;
+  opacity: 0; transform: scale(0.7); transition: 0.4s var(--ease);
+}
+.ev-tile .ev-zoom svg { width: 17px; height: 17px; }
+.ev-tile:hover { transform: translateY(-8px); box-shadow: 0 30px 58px color-mix(in srgb, var(--e-dark) 30%, transparent); }
+.ev-tile:hover img { transform: scale(1.1); }
+.ev-tile:hover .ev-zoom { opacity: 1; transform: scale(1); }
+.ev-tile:focus-visible { outline: 3px solid var(--e-accent); outline-offset: 3px; }
+.ev-tile.big  { grid-column: span 2; grid-row: span 2; }
+.ev-tile.wide { grid-column: span 2; }
+.ev-tile.tall { grid-row: span 2; }
+/* 4 columns only on genuinely wide screens — below that the tiles get too
+   narrow for their captions, so drop to 2 well before the phone breakpoint */
+@media (max-width: 1040px) { .ev-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 190px; } }
+@media (max-width: 520px) {
+  .ev-mosaic { grid-template-columns: 1fr; grid-auto-rows: 210px; }
+  .ev-tile.big, .ev-tile.wide { grid-column: span 1; }
+  .ev-tile.big, .ev-tile.tall { grid-row: span 1; }
+}
+
+/* ---------- closing reflection ---------- */
+.ev-reflect {
+  position: relative; max-width: 900px; margin: clamp(40px, 6vw, 68px) auto 0; text-align: center;
+  padding: clamp(32px, 5vw, 54px) clamp(22px, 4vw, 52px); border-radius: clamp(18px, 3vw, 26px);
+  background: linear-gradient(125deg, var(--e-dark), var(--e-mid)); color: #fff;
+  box-shadow: 0 30px 62px color-mix(in srgb, var(--e-dark) 32%, transparent); overflow: hidden;
+}
+.ev-reflect::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.14; pointer-events: none;
+  background-image: radial-gradient(circle at 50% 50%, transparent 6px, color-mix(in srgb, var(--e-accent) 55%, transparent) 6.4px, transparent 7.4px);
+  background-size: 40px 40px;
+}
+.ev-reflect .ev-star { margin: 0 auto 18px; width: 22px; height: 22px; box-shadow: 0 0 22px var(--e-accent); }
+.ev-reflect p { position: relative; font-family: var(--font-display); font-size: clamp(1.06rem, 2.1vw, 1.42rem); line-height: 1.75; }
+.ev-reflect cite { display: block; margin-top: 18px; font-style: normal; font-size: 0.84rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--e-accent); }
+
+/* =========================================================
+   ID- COMPONENTS — built for Independence Day, no poster to
+   work from, so the header and founders' tribute are original.
+   Uses the section's own --e-dark/--e-mid/--e-accent, so it
+   stays reusable if another flag-toned event is added later.
+   ========================================================= */
+
+/* ---------- id-hero: a rippling flag banner, no photograph ---------- */
+.id-hero {
+  position: relative; overflow: hidden; text-align: center; color: #fff;
+  padding: clamp(72px, 10vw, 120px) 0 clamp(56px, 7vw, 84px);
+  background: linear-gradient(160deg, var(--e-dark) 0%, var(--e-mid) 100%);
+}
+.id-hero::before {
+  content: ""; position: absolute; inset: -20% -10%; opacity: 0.15; pointer-events: none;
+  background: repeating-linear-gradient(124deg, rgba(255, 255, 255, 0.95) 0 12px, transparent 12px 58px);
+  animation: idWaveShift 16s linear infinite;
+}
+@keyframes idWaveShift { from { transform: translateX(0); } to { transform: translateX(-160px); } }
+.id-hero-glow {
+  position: absolute; left: 50%; top: 50%; width: 740px; height: 740px; transform: translate(-50%, -50%);
+  pointer-events: none; opacity: 0.7;
+  background: radial-gradient(circle, color-mix(in srgb, var(--e-accent) 38%, transparent), transparent 60%);
+  animation: idGlowPulse 6s ease-in-out infinite;
+}
+@keyframes idGlowPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.92; } }
+
+/* scattered twinkling stars for festivity around the medallion */
+.id-hero .ev-star { position: absolute; z-index: 3; background: #fff; box-shadow: 0 0 14px rgba(255, 255, 255, 0.7); animation: evTwinkle 4s ease-in-out infinite; }
+.id-hero .ev-star.a1 { width: 10px; height: 10px; left: 18%; top: 28%; animation-delay: 0.3s; }
+.id-hero .ev-star.a2 { width: 7px; height: 7px; right: 20%; top: 22%; animation-delay: 1.2s; }
+.id-hero .ev-star.a3 { width: 8px; height: 8px; right: 14%; bottom: 26%; animation-delay: 2.1s; }
+.id-hero .ev-star.a4 { width: 6px; height: 6px; left: 15%; bottom: 30%; animation-delay: 0.8s; }
+
+/* ---------- id-medal: Minar-e-Pakistan as the hero's centrepiece ---------- */
+.id-medal-wrap {
+  position: relative; z-index: 3; display: inline-grid; place-content: center;
+  width: clamp(160px, 30vw, 300px); height: clamp(160px, 30vw, 300px);
+}
+.id-medal-ring { position: absolute; border-radius: 50%; pointer-events: none; }
+.id-medal-ring.r1 { inset: -16px; border: 2px solid rgba(255, 255, 255, 0.55); animation: evSpotPulse 3.4s ease-in-out infinite; }
+.id-medal-ring.r2 { inset: -34px; border: 2px dashed rgba(255, 255, 255, 0.3); animation: spin 46s linear infinite; }
+.id-medal {
+  position: relative; z-index: 2; width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+  border: 5px solid rgba(255, 255, 255, 0.92); box-shadow: 0 30px 64px rgba(0, 0, 0, 0.45);
+  animation: idMedalFloat 5.5s ease-in-out infinite;
+}
+.id-medal img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes idMedalFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.id-medal-seal {
+  position: absolute; z-index: 4; right: -4px; bottom: -2px; width: clamp(52px, 8vw, 74px); height: clamp(52px, 8vw, 74px);
+  border-radius: 50%; display: grid; place-content: center;
+  background: linear-gradient(150deg, var(--e-accent), var(--e-mid));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 0 5px var(--e-dark);
+  animation: idEmblemGlow 3.6s ease-in-out infinite;
+}
+.id-medal-seal svg { width: 62%; height: 62%; }
+@keyframes idEmblemGlow {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3)); }
+  50% { filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.7)); }
+}
+
+.id-hero-cap { position: relative; z-index: 3; margin-top: clamp(22px, 3.4vw, 32px); }
+.id-hero-cap strong { display: block; font-family: var(--font-display); font-size: clamp(1.15rem, 2.4vw, 1.55rem); font-weight: 600; color: #fff; letter-spacing: 0.01em; }
+.id-hero-cap span { display: block; margin-top: 6px; font-size: 0.88rem; color: rgba(255, 255, 255, 0.82); max-width: 44ch; margin-inline: auto; line-height: 1.6; }
+
+/* ---------- id-founders: a tribute to the two names every student knows ---------- */
+.id-founders { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(18px, 3vw, 30px); max-width: 640px; margin: clamp(32px, 5vw, 50px) auto 0; }
+.id-founder {
+  position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 3/4;
+  box-shadow: 0 22px 46px color-mix(in srgb, var(--e-dark) 20%, transparent);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.id-founder:hover { transform: translateY(-8px); box-shadow: 0 32px 60px color-mix(in srgb, var(--e-dark) 28%, transparent); }
+.id-founder img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease); }
+.id-founder:hover img { transform: scale(1.08); }
+.id-founder::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 42%, color-mix(in srgb, var(--e-dark) 92%, transparent) 100%);
+}
+.id-founder-tag {
+  position: absolute; z-index: 3; left: 12px; top: 12px; font-size: 0.62rem; font-weight: 800;
+  letter-spacing: 0.13em; text-transform: uppercase; color: #fff;
+  background: color-mix(in srgb, var(--e-mid) 75%, transparent); padding: 5px 11px; border-radius: 999px;
+  backdrop-filter: blur(3px);
+}
+.id-founder-name { position: absolute; z-index: 3; left: 14px; right: 14px; bottom: 12px; color: #fff; }
+.id-founder-name b { display: block; font-family: var(--font-display); font-size: clamp(0.98rem, 2vw, 1.15rem); font-weight: 600; line-height: 1.25; }
+.id-founder-name span { font-size: 0.72rem; color: rgba(255, 255, 255, 0.82); }
+
+@media (max-width: 480px) {
+  .id-medal-ring.r2 { display: none; }
+  .id-hero .ev-star { display: none; }
+}
+
+/* =========================================================
+   MRC — MUHABBAT-E-RASOOL CONFERENCE, year-by-year gallery.
+   Reuses .ev-mosaic/.ev-tile as-is for the photos (so hover,
+   lightbox and theming all come for free); this block only adds
+   the year badge/heading row and the divider between years.
+   ========================================================= */
+.mrc-year { max-width: 1080px; margin: 0 auto clamp(40px, 5vw, 58px); }
+.mrc-year-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+.mrc-year-badge {
+  flex: none; width: 56px; height: 56px; border-radius: 14px;
+  background: linear-gradient(155deg, var(--e-mid), var(--e-dark)); color: var(--e-accent);
+  display: grid; place-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--e-dark) 35%, transparent);
+}
+.mrc-year-copy h4 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.1rem, 2vw, 1.35rem); color: var(--e-dark); margin-bottom: 5px; }
+.mrc-year-copy p { color: var(--ev-muted); font-size: 0.94rem; line-height: 1.75; max-width: 66ch; }
+.mrc-mosaic { margin-top: 18px !important; grid-auto-rows: 200px; }
+.mrc-divider {
+  border: none; height: 1px; max-width: 1080px; margin: 0 auto clamp(40px, 5vw, 58px);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--e-accent) 55%, transparent), transparent);
+}
+@media (max-width: 560px) { .mrc-year-head { flex-direction: column; } }
+
+/* =========================================================
+   ATC — ANNUAL TEACHERS CONFERENCE
+   Deliberately plain: this event uses the site's own base
+   design language (var(--blue)/var(--paper)/var(--font-display),
+   plain .section/.eyebrow/.section-title) rather than the
+   maroon/navy/green per-event drama used elsewhere on this
+   page. Photo tiles still join the shared page lightbox via
+   the .atc-photo trigger class (see script.js).
+   ========================================================= */
+.atc-poster {
+  max-width: 760px; margin: 0 auto clamp(44px, 6vw, 64px); background: #fff;
+  border-radius: 16px; padding: 16px; box-shadow: 0 14px 34px rgba(0, 61, 91, 0.1);
+  border: 1px solid rgba(0, 61, 91, 0.08);
+}
+.atc-poster img { width: 100%; display: block; border-radius: 8px; }
+
+.atc-year { max-width: 1080px; margin: 0 auto clamp(50px, 6vw, 74px); }
+.atc-year-head {
+  display: flex; align-items: flex-start; gap: 18px;
+  margin-bottom: clamp(26px, 3.5vw, 36px);
+}
+.atc-year-badge {
+  flex: none; width: 60px; height: 60px; border-radius: 14px; background: var(--blue);
+  color: #fff; display: grid; place-content: center; font-family: var(--font-display);
+  font-weight: 700; font-size: 1.05rem; box-shadow: 0 10px 22px var(--blue-glow);
+}
+.atc-year-copy h3 {
+  font-family: var(--font-display); font-weight: 600; font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  color: var(--blue); margin-bottom: 6px;
+}
+.atc-year-copy p { color: var(--muted); font-size: 0.97rem; line-height: 1.8; max-width: 68ch; }
+
+.atc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.atc-tile {
+  background: #fff; border-radius: 14px; overflow: hidden; cursor: zoom-in;
+  border: 1px solid rgba(0, 61, 91, 0.08); box-shadow: 0 8px 20px rgba(0, 61, 91, 0.06);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.atc-tile:hover { transform: translateY(-4px); box-shadow: 0 18px 34px rgba(0, 61, 91, 0.14); }
+.atc-tile.wide { grid-column: span 3; }
+.atc-tile-img { aspect-ratio: 4/3; overflow: hidden; }
+.atc-tile.wide .atc-tile-img { aspect-ratio: 21/9; }
+.atc-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease); }
+.atc-tile:hover img { transform: scale(1.05); }
+.atc-tile figcaption { padding: 12px 14px 14px; font-size: 0.85rem; color: var(--ink); font-weight: 600; line-height: 1.4; }
+.atc-tile figcaption small { display: block; margin-top: 3px; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+
+.atc-divider {
+  border: none; height: 1px; max-width: 1080px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(0, 61, 91, 0.14), transparent);
+}
+
+@media (max-width: 900px) {
+  .atc-grid { grid-template-columns: repeat(2, 1fr); }
+  .atc-tile.wide { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .atc-grid { grid-template-columns: 1fr; }
+  .atc-tile.wide { grid-column: span 1; }
+  .atc-tile.wide .atc-tile-img { aspect-ratio: 4/3; }
+  .atc-year-head { flex-direction: column; }
+}
+
+/* =========================================================
+   MORE EVENTS COMING — makes the roadmap explicit
+   ========================================================= */
+.ev-next { background: var(--ev-wine-deep); color: #fff; padding: clamp(52px, 7vw, 92px) 0; position: relative; overflow: hidden; }
+.ev-next::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.1; pointer-events: none;
+  background-image: radial-gradient(circle at 50% 50%, transparent 7px, rgba(232,181,106,0.5) 7.4px, transparent 8.4px);
+  background-size: 46px 46px;
+}
+.ev-next .container { position: relative; z-index: 3; text-align: center; max-width: 900px; }
+.ev-next h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3.4vw, 2.4rem); font-weight: 600; margin-bottom: 14px; }
+.ev-next h2 .gold { color: var(--ev-gold-lt); }
+.ev-next p { color: rgba(255, 245, 238, 0.8); line-height: 1.85; margin-bottom: 30px; }
+.ev-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; text-align: left; }
+.ev-slot {
+  border: 1px dashed rgba(232, 181, 106, 0.4); border-radius: 16px; padding: 22px 20px;
+  background: rgba(255, 255, 255, 0.05); transition: 0.4s var(--ease);
+}
+.ev-slot:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--ev-gold); transform: translateY(-5px); }
+.ev-slot b { display: block; font-family: var(--font-display); font-size: 1.06rem; color: var(--ev-gold-lt); margin-bottom: 6px; font-weight: 600; }
+.ev-slot span { font-size: 0.86rem; color: rgba(255, 245, 238, 0.68); line-height: 1.65; }
+
+/* =========================================================
+   LIGHTBOX
+   ========================================================= */
+.ev-lightbox {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 24px;
+  background: rgba(26, 4, 11, 0.95); backdrop-filter: blur(6px);
+  opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease), visibility 0.35s;
+}
+.ev-lightbox.open { opacity: 1; visibility: visible; }
+.ev-lb-figure { position: relative; max-width: min(1040px, 100%); max-height: 100%; display: flex; flex-direction: column; gap: 12px; }
+.ev-lb-figure img {
+  max-width: 100%; max-height: calc(100vh - 130px); width: auto; height: auto; object-fit: contain;
+  border-radius: 12px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  transform: scale(0.94); transition: transform 0.38s var(--ease);
+}
+.ev-lightbox.open .ev-lb-figure img { transform: scale(1); }
+.ev-lb-cap { text-align: center; color: rgba(255, 245, 238, 0.9); font-size: 0.9rem; font-weight: 600; }
+.ev-lb-cap span { display: block; font-weight: 400; font-size: 0.8rem; color: rgba(255, 245, 238, 0.62); margin-top: 3px; }
+.ev-lb-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%;
+  border: none; background: rgba(255, 255, 255, 0.14); color: #fff; cursor: pointer;
+  display: grid; place-content: center; transition: 0.3s var(--ease); z-index: 4;
+}
+.ev-lb-btn:hover { background: var(--ev-gold); color: var(--ev-wine); }
+.ev-lb-btn svg { width: 22px; height: 22px; }
+.ev-lb-btn.prev { left: -66px; }
+.ev-lb-btn.next { right: -66px; }
+.ev-lb-close {
+  position: fixed; top: 20px; right: 22px; width: 46px; height: 46px; border-radius: 50%; border: none;
+  background: rgba(255, 255, 255, 0.14); color: #fff; cursor: pointer; display: grid; place-content: center;
+  transition: 0.3s var(--ease); z-index: 5;
+}
+.ev-lb-close:hover { background: var(--ev-gold); color: var(--ev-wine); transform: rotate(90deg); }
+.ev-lb-close svg { width: 21px; height: 21px; }
+@media (max-width: 1160px) {
+  .ev-lb-btn.prev { left: 6px; }
+  .ev-lb-btn.next { right: 6px; }
+  .ev-lb-btn { background: rgba(26, 4, 11, 0.65); }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ev-hero, .ev-glow, .ev-rays, .ev-motes i, .ev-hero-bg-slide, .ev-collage .ev-ring-dash, .ev-rule .ev-star,
+  .ev-crest-beam, .ev-crest-laurel svg, .ev-crest-medal::after { animation: none !important; }
+  .ev-motes { display: none; }
+  /* still show one photo, just held still rather than looping */
+  .ev-hero-bg-slide:first-child { opacity: 0.4 !important; }
+}

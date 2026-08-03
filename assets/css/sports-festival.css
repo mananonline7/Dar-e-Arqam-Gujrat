@@ -1,0 +1,449 @@
+/* =========================================================
+   SPORTS FESTIVAL — a deliberately different page. Dark
+   charcoal/gray "stadium broadcast" theme instead of the
+   site's blue/paper system. Reuses styles.css only for the
+   shared header/footer/.reveal/.container/[data-parallax]/
+   [data-count] mechanics — everything visual below the header
+   is bespoke to this page, scoped under body.sf.
+   ========================================================= */
+
+body.sf {
+  --sf-black: #08090a;
+  --sf-charcoal: #131417;
+  --sf-charcoal-2: #1c1e22;
+  --sf-panel: #202226;
+  --sf-line: rgba(255, 255, 255, 0.09);
+  --sf-gray-700: #3a3d44;
+  --sf-gray-500: #6b6f78;
+  --sf-gray-300: #a7aab2;
+  --sf-silver: #d4d6db;
+  --sf-white: #f6f7f9;
+  --sf-accent: #ffc600;
+  --sf-accent-dim: rgba(255, 198, 0, 0.28);
+  background: var(--sf-charcoal);
+  color: var(--sf-silver);
+}
+body.sf .footer { position: relative; z-index: 2; }
+
+/* keep the transparent header legible over the dark hero */
+body.sf .site-header:not(.scrolled) {
+  background: linear-gradient(180deg, rgba(8, 9, 10, 0.85) 0%, rgba(8, 9, 10, 0.4) 75%, transparent 100%);
+}
+
+/* ---------- shared building blocks ---------- */
+.sf-eyebrow {
+  display: inline-flex; align-items: center; gap: 9px; font-family: "Oswald", var(--font);
+  font-weight: 600; font-size: 0.78rem; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--sf-accent);
+}
+.sf-eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--sf-accent); flex: none; }
+
+.sf-h2 {
+  font-family: "Oswald", var(--font); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.03; letter-spacing: 0.01em;
+  color: var(--sf-white); margin: 14px 0 16px;
+}
+.sf-h2 .hl { color: var(--sf-accent); }
+.sf-lede { color: var(--sf-gray-300); font-size: clamp(1rem, 1.4vw, 1.14rem); line-height: 1.85; max-width: 68ch; }
+
+/* diagonal section seam — a thin angled gash of accent light between sections */
+.sf-seam { position: relative; height: 0; }
+.sf-seam::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--sf-accent) 18%, var(--sf-accent) 82%, transparent);
+  transform: skewY(-1.1deg); transform-origin: left; opacity: 0.55;
+}
+
+/* =========================================================
+   HERO — stadium broadcast opener
+   ========================================================= */
+.sf-hero {
+  position: relative; min-height: 100vh; display: flex; align-items: flex-end;
+  overflow: hidden; background: var(--sf-black); padding: calc(var(--header-h) + 40px) 0 0;
+  isolation: isolate;
+}
+.sf-hero-bg { position: absolute; inset: 0; z-index: 0; }
+.sf-hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  filter: grayscale(0.55) contrast(1.15) brightness(0.52);
+  transform: scale(1.08);
+}
+.sf-hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 55% at 22% 30%, rgba(255, 198, 0, 0.16), transparent 65%),
+    linear-gradient(190deg, rgba(8, 9, 10, 0.15) 0%, rgba(8, 9, 10, 0.55) 45%, var(--sf-black) 96%),
+    linear-gradient(90deg, rgba(8, 9, 10, 0.88) 0%, rgba(8, 9, 10, 0.15) 46%, rgba(8, 9, 10, 0.15) 60%, rgba(8, 9, 10, 0.88) 100%);
+}
+/* moving diagonal light sweep, stadium-spotlight style */
+.sf-hero-sweep {
+  position: absolute; inset: -20% -10%; z-index: 1; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.06) 48%, rgba(255, 198, 0, 0.14) 50%, rgba(255, 255, 255, 0.06) 52%, transparent 60%);
+  animation: sfSweep 7s linear infinite;
+}
+@keyframes sfSweep { 0% { transform: translateX(-30%); } 100% { transform: translateX(30%); } }
+
+/* cursor-reactive spotlight (JS sets --mx/--my in %) */
+.sf-hero-spot {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(420px 420px at var(--mx, 50%) var(--my, 35%), rgba(255, 198, 0, 0.12), transparent 70%);
+  transition: background-position 0.2s linear;
+}
+
+.sf-hero-lines { position: absolute; inset: 0; z-index: 1; opacity: 0.5; pointer-events: none;
+  background-image: repeating-linear-gradient(-8deg, transparent 0 68px, rgba(255,255,255,0.035) 68px 69px);
+}
+
+.sf-hero-particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.sf-hero-particles span {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--sf-accent);
+  opacity: 0; animation: sfFloat linear infinite;
+}
+@keyframes sfFloat {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  10% { opacity: 0.7; } 90% { opacity: 0.5; }
+  100% { transform: translateY(-92vh) scale(1.3); opacity: 0; }
+}
+
+.sf-hero .container { position: relative; z-index: 3; width: 100%; padding-bottom: clamp(46px, 7vw, 84px); }
+.sf-hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(20px, 4vw, 50px); align-items: end; }
+
+.sf-hero-badge {
+  display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px;
+  border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--sf-line);
+  backdrop-filter: blur(6px); font-family: "Oswald", var(--font); font-weight: 600;
+  font-size: 0.76rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sf-silver);
+  opacity: 0; animation: sfIn 0.8s var(--ease) 0.15s forwards;
+}
+.sf-hero-badge b {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--sf-accent); color: var(--sf-black); font-size: 0.7rem;
+}
+@keyframes sfIn { to { opacity: 1; transform: none; } }
+[class*="sf-hero"] [class*="reveal-in"] {}
+
+.sf-hero-title {
+  font-family: "Oswald", var(--font); font-weight: 700; text-transform: uppercase;
+  color: var(--sf-white); line-height: 0.98; letter-spacing: 0.005em;
+  font-size: clamp(2.6rem, 7vw, 5.6rem); margin: 18px 0 20px;
+}
+.sf-hero-title .line { display: block; overflow: hidden; }
+.sf-hero-title .word {
+  display: inline-block; transform: translateY(110%); opacity: 0;
+  animation: sfWordUp 0.85s var(--ease) forwards; animation-delay: var(--d, 0s);
+}
+@keyframes sfWordUp { to { transform: translateY(0); opacity: 1; } }
+.sf-hero-title .accent { color: var(--sf-accent); position: relative; }
+
+.sf-hero-sub {
+  max-width: 54ch; color: var(--sf-gray-300); font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.8;
+  opacity: 0; animation: sfIn 0.9s var(--ease) 0.9s forwards;
+}
+
+.sf-hero-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 30px; opacity: 0; animation: sfIn 0.9s var(--ease) 1.05s forwards; }
+.sf-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px;
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.92rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--sf-black); background: var(--sf-accent); border: none;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  box-shadow: 0 14px 30px rgba(255, 198, 0, 0.18);
+}
+.sf-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(255, 198, 0, 0.3); }
+.sf-btn.ghost {
+  background: transparent; color: var(--sf-white); border: 1.5px solid var(--sf-gray-500);
+  box-shadow: none; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.sf-btn.ghost:hover { border-color: var(--sf-accent); color: var(--sf-accent); transform: translateY(-3px); }
+.sf-btn svg { width: 16px; height: 16px; }
+
+/* floating broadcast cards — angular photo stack */
+.sf-hero-cards { position: relative; height: clamp(320px, 42vw, 460px); }
+.sf-hcard {
+  position: absolute; overflow: hidden; border: 1px solid var(--sf-line);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55); opacity: 0; will-change: transform;
+  animation: sfCardIn 0.9s var(--ease) forwards; animation-delay: var(--d, 0s);
+}
+@keyframes sfCardIn { from { opacity: 0; transform: translateY(40px) rotate(var(--r, 0deg)); } to { opacity: 1; transform: translateY(0) rotate(var(--r, 0deg)); } }
+.sf-hcard img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(1.05) contrast(1.05); }
+.sf-hcard.c1 { width: 58%; height: 62%; left: 0; top: 0; --r: -2.5deg; clip-path: polygon(0 0, 100% 3%, 96% 100%, 4% 97%); z-index: 3; }
+.sf-hcard.c2 { width: 48%; height: 46%; right: 0; top: 8%; --r: 2deg; clip-path: polygon(4% 0, 100% 4%, 100% 97%, 0 100%); z-index: 2; }
+.sf-hcard.c3 { width: 46%; height: 42%; left: 6%; bottom: 0; --r: 1.6deg; clip-path: polygon(0 4%, 96% 0, 100% 96%, 4% 100%); z-index: 4; }
+.sf-hcard:hover { transform: translateY(-6px) scale(1.02) rotate(var(--r, 0deg)); z-index: 5; transition: transform 0.5s var(--ease); }
+.sf-hcard-tag {
+  position: absolute; left: 12px; bottom: 12px; z-index: 2; color: #fff;
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+.sf-hero-scroll {
+  position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--sf-gray-300);
+  font-family: "Oswald", var(--font); font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase;
+  opacity: 0; animation: sfIn 1s ease 1.6s forwards;
+}
+.sf-hero-scroll i { width: 1px; height: 34px; background: linear-gradient(var(--sf-accent), transparent); position: relative; overflow: hidden; }
+.sf-hero-scroll i::after { content: ""; position: absolute; left: 0; top: -100%; width: 100%; height: 100%; background: var(--sf-accent); animation: sfScrollLine 1.8s ease-in-out infinite; }
+@keyframes sfScrollLine { 0% { top: -100%; } 100% { top: 100%; } }
+
+/* ---------- ticker: scoreboard marquee ---------- */
+.sf-ticker { position: relative; z-index: 3; background: var(--sf-accent); overflow: hidden; }
+.sf-ticker-track { display: flex; width: max-content; animation: sfTicker 32s linear infinite; }
+.sf-ticker-track span {
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 34px;
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.86rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--sf-black); white-space: nowrap; border-right: 1px solid rgba(0,0,0,0.15);
+}
+.sf-ticker-track span::before { content: "●"; font-size: 0.5rem; }
+@keyframes sfTicker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .sf-ticker-track { animation: none; } }
+
+/* =========================================================
+   STATS STRIP
+   ========================================================= */
+.sf-stats {
+  position: relative; background: var(--sf-black);
+  padding: clamp(40px, 6vw, 64px) 0; overflow: hidden;
+}
+.sf-stats::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.5; pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, transparent 0 118px, rgba(255,255,255,0.03) 118px 119px);
+}
+.sf-stats-grid {
+  position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr);
+  max-width: 1080px; margin: 0 auto; text-align: center;
+}
+.sf-stat { padding: 0 18px; border-right: 1px solid var(--sf-line); }
+.sf-stat:last-child { border-right: none; }
+.sf-stat b {
+  display: block; font-family: "Oswald", var(--font); font-weight: 700; font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+  color: var(--sf-white); line-height: 1;
+}
+.sf-stat b span { color: var(--sf-accent); }
+.sf-stat small {
+  display: block; margin-top: 10px; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--sf-gray-500); font-weight: 600;
+}
+@media (max-width: 760px) {
+  .sf-stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 30px; }
+  .sf-stat:nth-child(2) { border-right: none; }
+}
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+.sf-intro { background: var(--sf-charcoal); padding: clamp(64px, 8vw, 108px) 0; position: relative; }
+.sf-intro-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
+.sf-intro-copy p { margin-top: 18px; }
+.sf-intro-pillars { display: grid; gap: 14px; }
+.sf-pillar {
+  display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--sf-panel);
+  border: 1px solid var(--sf-line); clip-path: polygon(0 0, 100% 0, 100% 100%, 14px 100%);
+  transition: border-color 0.35s, transform 0.35s var(--ease);
+}
+.sf-pillar:hover { border-color: var(--sf-accent-dim); transform: translateX(6px); }
+.sf-pillar-ico {
+  flex: none; width: 46px; height: 46px; display: grid; place-content: center; border-radius: 50%;
+  background: rgba(255, 198, 0, 0.1); color: var(--sf-accent);
+}
+.sf-pillar-ico svg { width: 22px; height: 22px; }
+.sf-pillar b { display: block; color: var(--sf-white); font-family: "Oswald", var(--font); font-size: 1.02rem; letter-spacing: 0.02em; text-transform: uppercase; }
+.sf-pillar span { display: block; margin-top: 3px; font-size: 0.86rem; color: var(--sf-gray-300); line-height: 1.5; }
+@media (max-width: 860px) { .sf-intro-grid { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   REGIONAL + NATIONAL EVENT SECTIONS (shared skeleton)
+   ========================================================= */
+.sf-event { position: relative; padding: clamp(70px, 9vw, 120px) 0; overflow: hidden; }
+.sf-event.regional { background: var(--sf-charcoal-2); }
+.sf-event.national { background: var(--sf-black); }
+.sf-event::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 140px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+}
+.sf-event-head { max-width: 780px; margin-bottom: clamp(40px, 5vw, 60px); }
+
+.sf-title-tag {
+  font-family: "Oswald", var(--font); font-weight: 700; font-size: clamp(6rem, 14vw, 11rem);
+  color: transparent; -webkit-text-stroke: 1.5px var(--sf-line); text-stroke: 1.5px var(--sf-line);
+  position: absolute; top: -0.12em; right: clamp(-10px, 2vw, 40px); line-height: 1; z-index: 0;
+  user-select: none; pointer-events: none; letter-spacing: -0.02em;
+}
+
+/* ---------- year rail (Regional) ---------- */
+.sf-yearnav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(36px, 5vw, 54px); position: relative; z-index: 2; }
+.sf-yearnav a {
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em;
+  padding: 10px 20px; color: var(--sf-gray-300); border: 1px solid var(--sf-line);
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); transition: 0.3s var(--ease);
+}
+.sf-yearnav a:hover, .sf-yearnav a.is-active { background: var(--sf-accent); color: var(--sf-black); border-color: var(--sf-accent); }
+
+.sf-year { position: relative; z-index: 2; max-width: 1140px; margin: 0 auto clamp(56px, 7vw, 84px); }
+.sf-year:last-child { margin-bottom: 0; }
+.sf-year-head { display: flex; align-items: flex-end; gap: 22px; margin-bottom: clamp(24px, 3vw, 34px); flex-wrap: wrap; }
+.sf-year-num {
+  font-family: "Oswald", var(--font); font-weight: 700; font-size: clamp(2.6rem, 5vw, 3.6rem);
+  color: var(--sf-white); line-height: 0.9; position: relative;
+}
+.sf-year-num::after { content: ""; display: block; width: 46px; height: 3px; background: var(--sf-accent); margin-top: 10px; }
+.sf-year-copy { flex: 1 1 320px; min-width: 0; }
+.sf-year-copy h4 { font-family: "Oswald", var(--font); font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; font-size: clamp(1.1rem, 2vw, 1.4rem); color: var(--sf-silver); margin-bottom: 6px; }
+.sf-year-copy p { color: var(--sf-gray-300); font-size: 0.95rem; line-height: 1.75; max-width: 62ch; }
+.sf-year-winner {
+  flex: none; display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px;
+  background: rgba(255, 198, 0, 0.1); border: 1px solid var(--sf-accent-dim); color: var(--sf-accent);
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.sf-year-winner svg { width: 15px; height: 15px; }
+
+/* ---------- photo grid: grayscale-to-colour hover, angular tiles ---------- */
+.sf-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 190px; gap: 14px; }
+.sf-tile {
+  position: relative; overflow: hidden; cursor: zoom-in; background: var(--sf-panel);
+  border: 1px solid var(--sf-line);
+}
+.sf-tile img { width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: grayscale(0.85) contrast(1.05) brightness(0.92);
+  transition: transform 0.7s var(--ease), filter 0.6s var(--ease); }
+.sf-tile:hover img { filter: grayscale(0) contrast(1.05) brightness(1); transform: scale(1.08); }
+.sf-tile::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.92));
+  opacity: 0.92; transition: opacity 0.4s;
+}
+.sf-tile:hover::after { opacity: 0.65; }
+.sf-tile figcaption {
+  position: absolute; z-index: 2; left: 14px; right: 14px; bottom: 12px; color: #fff;
+  font-family: "Oswald", var(--font); font-weight: 600; font-size: 0.84rem; letter-spacing: 0.02em; line-height: 1.3;
+  transform: translateY(4px); transition: transform 0.4s var(--ease);
+}
+.sf-tile:hover figcaption { transform: translateY(0); }
+.sf-tile figcaption small { display: block; margin-top: 3px; font-weight: 400; font-size: 0.72rem; color: rgba(255,255,255,0.62); text-transform: none; letter-spacing: 0; font-family: var(--font); }
+.sf-tile-zoom {
+  position: absolute; z-index: 2; right: 12px; top: 12px; width: 32px; height: 32px;
+  background: var(--sf-accent); color: var(--sf-black); display: grid; place-content: center;
+  opacity: 0; transform: scale(0.6) rotate(-8deg); transition: 0.4s var(--ease);
+}
+.sf-tile:hover .sf-tile-zoom { opacity: 1; transform: scale(1) rotate(0deg); }
+.sf-tile-zoom svg { width: 15px; height: 15px; }
+.sf-tile.big { grid-column: span 2; grid-row: span 2; }
+.sf-tile.wide { grid-column: span 2; }
+.sf-tile.tall { grid-row: span 2; }
+.sf-tile:focus-visible { outline: 2px solid var(--sf-accent); outline-offset: 2px; }
+
+@media (max-width: 1020px) { .sf-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; } }
+@media (max-width: 560px) {
+  .sf-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
+  .sf-tile.big, .sf-tile.wide { grid-column: span 1; }
+  .sf-tile.big, .sf-tile.tall { grid-row: span 1; }
+}
+
+/* ---------- national subsection labels ---------- */
+.sf-sub { position: relative; z-index: 2; max-width: 1140px; margin: 0 auto clamp(56px, 7vw, 84px); }
+.sf-sub:last-child { margin-bottom: 0; }
+.sf-sub-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: clamp(22px, 3vw, 30px); }
+.sf-sub-num { font-family: "Oswald", var(--font); font-weight: 700; font-size: 1.3rem; color: var(--sf-accent); }
+.sf-sub-head h4 { font-family: "Oswald", var(--font); font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; font-size: clamp(1.15rem, 2.2vw, 1.55rem); color: var(--sf-white); }
+.sf-sub-head span { color: var(--sf-gray-500); font-size: 0.86rem; }
+
+/* franchise-style team cards (national) */
+.sf-teams { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.sf-team-card { position: relative; overflow: hidden; aspect-ratio: 4/5; border: 1px solid var(--sf-line); }
+.sf-team-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.7) brightness(0.6); transition: transform 0.7s var(--ease), filter 0.6s var(--ease); }
+.sf-team-card:hover img { filter: grayscale(0) brightness(0.8); transform: scale(1.06); }
+.sf-team-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.92)); }
+.sf-team-tag {
+  position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 16px; color: #fff;
+}
+.sf-team-tag b { display: block; font-family: "Oswald", var(--font); font-weight: 700; text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; }
+.sf-team-tag span { display: block; margin-top: 4px; font-size: 0.78rem; color: rgba(255,255,255,0.7); }
+.sf-team-tag em { display: inline-block; margin-top: 8px; font-style: normal; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; background: var(--sf-accent); color: var(--sf-black); font-weight: 700; }
+@media (max-width: 760px) { .sf-teams { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .sf-teams { grid-template-columns: 1fr; } }
+
+/* champions spotlight */
+.sf-champs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.sf-champ-card {
+  position: relative; overflow: hidden; aspect-ratio: 16/11; border: 1px solid var(--sf-accent-dim);
+}
+.sf-champ-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+.sf-champ-card:hover img { transform: scale(1.06); }
+.sf-champ-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(200deg, transparent 40%, rgba(0,0,0,0.9)); z-index: 1; }
+.sf-champ-badge {
+  position: absolute; z-index: 2; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; background: var(--sf-accent); color: var(--sf-black); font-family: "Oswald", var(--font);
+  font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.sf-champ-badge svg { width: 13px; height: 13px; }
+.sf-champ-cap { position: absolute; z-index: 2; left: 18px; right: 18px; bottom: 16px; color: #fff; }
+.sf-champ-cap b { display: block; font-family: "Oswald", var(--font); font-weight: 700; text-transform: uppercase; font-size: 1.15rem; line-height: 1.25; }
+.sf-champ-cap span { display: block; margin-top: 5px; font-size: 0.84rem; color: rgba(255,255,255,0.72); line-height: 1.5; }
+@media (max-width: 760px) { .sf-champs { grid-template-columns: 1fr; } }
+
+/* ---------- closing reflect / cite ---------- */
+.sf-reflect { position: relative; z-index: 2; max-width: 780px; margin: clamp(50px, 6vw, 74px) auto 0; text-align: center; }
+.sf-reflect p { font-family: "Oswald", var(--font); font-weight: 500; font-size: clamp(1.05rem, 2vw, 1.35rem); line-height: 1.7; color: var(--sf-white); text-transform: none; letter-spacing: 0; }
+.sf-reflect cite { display: block; margin-top: 16px; font-style: normal; color: var(--sf-accent); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* =========================================================
+   HIGHLIGHTS GALLERY
+   ========================================================= */
+.sf-highlights { background: var(--sf-charcoal-2); padding: clamp(70px, 9vw, 120px) 0; position: relative; }
+.sf-hl-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 210px; gap: 14px; }
+.sf-hl-grid .sf-tile.big { grid-column: span 2; grid-row: span 2; }
+@media (max-width: 1020px) { .sf-hl-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 220px; } }
+@media (max-width: 560px) {
+  .sf-hl-grid { grid-template-columns: 1fr; grid-auto-rows: 230px; }
+  .sf-hl-grid .sf-tile.big { grid-column: span 1; grid-row: span 1; }
+}
+
+/* =========================================================
+   LIGHTBOX (sf- prefixed instance of the generic pattern)
+   ========================================================= */
+.sf-lightbox {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
+  background: rgba(2, 2, 3, 0.93); opacity: 0; visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease); padding: 20px;
+}
+.sf-lightbox.open { opacity: 1; visibility: visible; }
+.sf-lb-figure { position: relative; max-width: min(1000px, 92vw); max-height: 88vh; }
+.sf-lb-figure img { max-width: 100%; max-height: 80vh; display: block; margin: 0 auto; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6); }
+.sf-lb-cap { color: #fff; text-align: center; margin-top: 14px; font-family: "Oswald", var(--font); font-size: 0.92rem; letter-spacing: 0.02em; }
+.sf-lb-cap span { display: block; margin-top: 3px; font-size: 0.76rem; color: rgba(255, 255, 255, 0.6); font-family: var(--font); }
+.sf-lb-close {
+  position: absolute; top: -50px; right: 0; width: 40px; height: 40px;
+  background: rgba(255, 255, 255, 0.1); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer;
+}
+.sf-lb-close:hover { background: var(--sf-accent); color: var(--sf-black); }
+.sf-lb-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px;
+  background: rgba(255, 255, 255, 0.1); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer; z-index: 4;
+}
+.sf-lb-btn:hover { background: var(--sf-accent); color: var(--sf-black); }
+.sf-lb-btn.prev { left: -66px; }
+.sf-lb-btn.next { right: -66px; }
+@media (max-width: 1100px) {
+  .sf-lb-btn.prev { left: 6px; } .sf-lb-btn.next { right: 6px; }
+  .sf-lb-btn { background: rgba(2, 2, 3, 0.6); }
+}
+
+/* =========================================================
+   RESPONSIVE — hero + section-level
+   ========================================================= */
+@media (max-width: 1000px) {
+  .sf-hero-grid { grid-template-columns: 1fr; }
+  .sf-hero-cards { height: clamp(280px, 70vw, 380px); margin-top: 30px; }
+}
+@media (max-width: 640px) {
+  .sf-hero { align-items: center; padding-top: calc(var(--header-h) + 24px); }
+  .sf-hero-title { font-size: clamp(2.3rem, 11vw, 3.2rem); }
+  .sf-btn, .sf-btn.ghost { padding: 13px 22px; font-size: 0.84rem; }
+  .sf-event-head { max-width: 100%; }
+  .sf-title-tag { display: none; }
+  .sf-year-head { flex-direction: column; align-items: flex-start; }
+}

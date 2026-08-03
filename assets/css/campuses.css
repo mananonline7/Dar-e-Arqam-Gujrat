@@ -1,0 +1,94 @@
+/* =========================================================
+   CAMPUSES — clean, content-first redesign.
+   Reuses the site's own .section/.section-head/.eyebrow/.hl/
+   .container/.reveal system; this file only covers the campus
+   roster itself: a few large "featured" photo cards up top,
+   then an easy-to-scan directory grid for the full network.
+   ========================================================= */
+
+/* ---------- quick stat strip ---------- */
+.cp-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(28px, 6vw, 64px); margin: 0 auto clamp(48px, 6vw, 72px); }
+.cp-stat { text-align: center; }
+.cp-stat b { display: block; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.7rem, 3vw, 2.3rem); color: var(--blue); line-height: 1; }
+.cp-stat span { display: block; margin-top: 7px; font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.cp-stat-div { width: 1px; align-self: stretch; background: var(--paper-2); }
+@media (max-width: 560px) { .cp-stat-div { display: none; } }
+
+/* ---------- sub-heading between the two roster tiers ---------- */
+.cp-tier-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1080px; margin: 0 auto 28px; }
+.cp-tier-head h3 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.2rem, 2.2vw, 1.5rem); color: var(--blue); }
+.cp-tier-head p { color: var(--muted); font-size: 0.92rem; max-width: 46ch; }
+
+/* =========================================================
+   FEATURED — large, prominent photo cards
+   ========================================================= */
+.cp-featured { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1200px; margin: 0 auto clamp(60px, 7vw, 92px); }
+.cp-feat-card {
+  background: #fff; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--paper-2);
+  box-shadow: var(--shadow-sm); transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.cp-feat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.cp-feat-media { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+.cp-feat-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s var(--ease); }
+.cp-feat-card:hover .cp-feat-media img { transform: scale(1.07); }
+.cp-feat-badge {
+  position: absolute; top: 16px; left: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(1, 34, 53, 0.72); backdrop-filter: blur(4px); color: #fff; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px;
+}
+.cp-feat-badge svg { width: 13px; height: 13px; color: var(--yellow); flex: none; }
+.cp-feat-body { padding: clamp(22px, 3vw, 28px); }
+.cp-feat-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.cp-feat-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 11px; border-radius: 999px; background: rgba(255, 198, 0, 0.18); color: var(--blue); }
+.cp-feat-body h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--blue); margin-bottom: 10px; }
+.cp-feat-body p { color: var(--muted); font-size: 0.94rem; line-height: 1.75; margin-bottom: 16px; }
+.cp-feat-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--paper-2); }
+.cp-feat-phone { display: inline-flex; align-items: center; gap: 7px; font-size: 0.86rem; font-weight: 700; color: var(--blue-400); }
+.cp-feat-phone svg { width: 15px; height: 15px; flex: none; }
+.cp-feat-phone:hover { color: var(--yellow); }
+.cp-feat-link { font-size: 0.84rem; font-weight: 700; color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+.cp-feat-link:hover { color: var(--yellow); }
+.cp-feat-link svg { width: 13px; height: 13px; transition: transform 0.3s var(--ease); }
+.cp-feat-link:hover svg { transform: translateX(3px); }
+
+@media (max-width: 980px) { .cp-featured { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .cp-featured { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   DIRECTORY — the full network, easy to scan
+   ========================================================= */
+.cp-directory { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; max-width: 1200px; margin: 0 auto; }
+.cp-card {
+  position: relative; background: #fff; border: 1px solid var(--paper-2); border-radius: 16px;
+  padding: 22px 22px 20px; box-shadow: var(--shadow-sm); transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s;
+}
+.cp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(255, 198, 0, 0.4); }
+.cp-card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+.cp-mono {
+  flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-content: center;
+  background: linear-gradient(150deg, var(--blue), var(--blue-400)); color: var(--yellow-soft);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+}
+.cp-card h4 { font-family: var(--font-display); font-weight: 600; font-size: 1.06rem; color: var(--blue); line-height: 1.3; }
+.cp-card-area { display: block; margin-top: 3px; font-size: 0.74rem; color: var(--muted); font-weight: 600; letter-spacing: 0.03em; }
+.cp-card p { color: var(--muted); font-size: 0.86rem; line-height: 1.65; margin-bottom: 14px; }
+.cp-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--paper-2); }
+.cp-card-foot a { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--blue-400); }
+.cp-card-foot a:hover { color: var(--yellow); }
+.cp-card-foot svg { width: 13px; height: 13px; flex: none; }
+.cp-card-badge {
+  font-size: 0.64rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--blue-400); background: rgba(0, 61, 91, 0.06); padding: 3px 9px; border-radius: 999px;
+}
+
+/* ---------- opening soon ---------- */
+.cp-soon-wrap { max-width: 1200px; margin: clamp(56px, 6vw, 80px) auto 0; }
+.cp-soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; }
+.cp-card.is-soon { border: 1.5px dashed rgba(0, 61, 91, 0.22); box-shadow: none; background: var(--paper); }
+.cp-card.is-soon:hover { border-color: var(--yellow); transform: translateY(-4px); box-shadow: var(--shadow-sm); }
+.cp-card.is-soon .cp-mono { background: rgba(140, 47, 34, 0.1); color: #8c2f22; }
+.cp-card.is-soon .cp-card-badge { color: #8c2f22; background: rgba(140, 47, 34, 0.1); }
+
+@media (max-width: 480px) {
+  .cp-directory, .cp-soon-grid { grid-template-columns: 1fr; }
+}

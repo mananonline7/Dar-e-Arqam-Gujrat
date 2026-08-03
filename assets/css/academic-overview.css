@@ -1,0 +1,52 @@
+/* =========================================================
+   ACADEMIC OVERVIEW — deliberately minimal. Reuses the site's
+   own .section/.section-head/.eyebrow/.chip system; the rules
+   below only cover the prose layout, the two small grids, and
+   the closing callout. No page-specific palette or animation
+   beyond the shared .reveal fade-in.
+   ========================================================= */
+
+.ao-prose { max-width: 760px; margin: 0 auto; }
+.ao-prose p { color: var(--ink); font-size: clamp(1rem, 1.3vw, 1.08rem); line-height: 1.9; margin-bottom: 20px; }
+.ao-prose p:last-child { margin-bottom: 0; }
+.ao-prose p.lead { color: var(--blue); font-size: clamp(1.06rem, 1.5vw, 1.18rem); font-weight: 500; }
+
+.ao-figure { max-width: 860px; margin: clamp(32px, 5vw, 48px) auto; }
+.ao-figure img { width: 100%; border-radius: 14px; display: block; box-shadow: var(--shadow-md); }
+.ao-figure figcaption { text-align: center; font-size: 0.86rem; color: var(--muted); margin-top: 12px; }
+
+.ao-emphasis { max-width: 760px; margin: clamp(24px, 4vw, 36px) auto; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ao-emphasis li {
+  list-style: none; background: var(--paper); border: 1px solid var(--paper-2); border-radius: 12px;
+  padding: 16px 20px; color: var(--blue); font-weight: 600; font-size: 0.96rem;
+}
+@media (max-width: 620px) { .ao-emphasis { grid-template-columns: 1fr; } }
+
+.ao-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 860px; margin: clamp(32px, 5vw, 48px) auto 0; }
+.ao-card {
+  background: #fff; border: 1px solid var(--paper-2); border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 8px 20px rgba(0, 61, 91, 0.05); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.ao-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 61, 91, 0.1); }
+.ao-card .ao-num {
+  display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px;
+  border-radius: 10px; background: rgba(0, 61, 91, 0.08); color: var(--blue);
+  font-family: var(--font-display); font-weight: 700; font-size: 0.98rem; margin-bottom: 14px;
+}
+.ao-card p { color: var(--ink); font-size: 0.98rem; font-weight: 600; line-height: 1.5; }
+@media (max-width: 620px) { .ao-grid { grid-template-columns: 1fr; } }
+
+.ao-skills { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 900px; margin: clamp(28px, 4vw, 40px) auto 0; }
+.ao-skill {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 600; color: var(--blue);
+  background: rgba(255, 198, 0, 0.14); border: 1px solid rgba(255, 198, 0, 0.34);
+  padding: 9px 18px; border-radius: 999px;
+}
+.ao-skill svg { width: 14px; height: 14px; flex: none; }
+
+.ao-callout {
+  max-width: 780px; margin: clamp(48px, 6vw, 70px) auto 0; text-align: center;
+  padding: clamp(30px, 4vw, 44px) clamp(24px, 4vw, 40px); border-radius: 16px;
+  background: var(--paper); border: 1px solid var(--paper-2);
+}
+.ao-callout p { color: var(--blue); font-family: var(--font-display); font-size: clamp(1.05rem, 1.8vw, 1.28rem); line-height: 1.75; font-weight: 500; }
