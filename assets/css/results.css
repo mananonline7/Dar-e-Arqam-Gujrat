@@ -234,7 +234,7 @@
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   flex: none;
 }
-.rs-chapter.deep .rs-ch-year { background: linear-gradient(120deg, #fff, var(--rs-cyan) 55%, var(--rs-gold)); }
+.rs-chapter.deep .rs-ch-year { background: none; -webkit-text-fill-color: #fff; color: #fff; }
 .rs-ch-copy { flex: 1 1 330px; min-width: 0; }
 .rs-ch-copy .rs-chip {
   display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; font-weight: 800;
