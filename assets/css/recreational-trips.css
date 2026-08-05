@@ -1,0 +1,166 @@
+/* =========================================================
+   RECREATIONAL TRIPS — international travel, travel-inspired
+   styling. Reuses the site's own .hero2/.section/.dist-grid/
+   .reveal system; this file adds the intro strip, the two
+   destination blocks (photo-led for Malaysia, an illustrated
+   placeholder for Sri Lanka until its own photography arrives),
+   the stat strip, the closing takeaway row and the lightbox.
+   ========================================================= */
+
+/* intro strip right under the hero */
+.rt-intro { max-width: 760px; margin: 0 auto; text-align: center; }
+.rt-intro p { color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.12rem); line-height: 1.85; }
+
+/* small stat strip under the intro copy */
+.rt-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(14px, 3vw, 28px); max-width: 780px; margin: clamp(30px, 4vw, 42px) auto 0; }
+.rt-stat {
+  flex: 1 1 160px; text-align: center; padding: 18px 16px; border-radius: var(--radius);
+  background: var(--paper); border: 1px solid var(--paper-2);
+}
+.rt-stat b { display: block; font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.1rem); color: var(--blue); line-height: 1; }
+.rt-stat span { display: block; margin-top: 6px; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+/* on-page quick nav, plain pill row */
+.rt-jump { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 900px; margin: clamp(28px, 4vw, 40px) auto 0; }
+.rt-jump a {
+  font-size: 0.82rem; font-weight: 600; color: var(--blue-500); text-decoration: none;
+  padding: 8px 16px; border-radius: 999px; background: #fff; border: 1px solid var(--paper-2);
+  box-shadow: 0 6px 16px rgba(0, 61, 91, 0.06); transition: 0.3s var(--ease);
+}
+.rt-jump a:hover { background: var(--blue); color: #fff; border-color: var(--blue); transform: translateY(-2px); }
+
+/* ---------- one destination block per country ---------- */
+.rt-trip {
+  max-width: 1120px; margin: 0 auto; padding: clamp(40px, 6vw, 64px) 0;
+  border-top: 1px solid var(--paper-2);
+}
+.rt-trip:first-of-type { border-top: none; padding-top: 0; }
+
+.rt-trip-head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 14px; }
+.rt-tag {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #fff;
+  background: var(--rt-accent, var(--blue)); padding: 7px 16px; border-radius: 999px;
+}
+.rt-tag svg { width: 14px; height: 14px; flex: none; }
+.rt-flag { font-size: 1.4rem; line-height: 1; }
+
+.rt-trip h2 {
+  font-family: var(--font-display); font-weight: 600; line-height: 1.18;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem); color: var(--blue); margin-bottom: 6px;
+}
+.rt-trip .rt-kicker { display: block; font-size: 1rem; font-weight: 500; color: var(--rt-accent, var(--blue-400)); margin-bottom: 16px; }
+.rt-trip p.rt-copy { color: var(--muted); font-size: 1rem; line-height: 1.85; max-width: 76ch; margin-bottom: 20px; }
+.rt-trip p.rt-copy:last-of-type { margin-bottom: clamp(26px, 3.5vw, 36px); }
+
+/* pull-quote style highlight line inside a destination's narrative */
+.rt-highlight {
+  max-width: 76ch; margin: 0 0 clamp(26px, 3.5vw, 36px); padding: 18px 22px; border-radius: 14px;
+  background: var(--paper);
+  border-left: 4px solid var(--rt-accent, var(--blue));
+  font-family: var(--font-display); font-size: 1.05rem; color: var(--blue); line-height: 1.7;
+}
+
+/* ---------- photo gallery: neat, even, restrained ---------- */
+.rt-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.rt-photo {
+  position: relative; background: #fff; border-radius: 14px; overflow: hidden; cursor: zoom-in;
+  border: 1px solid var(--paper-2); box-shadow: 0 8px 18px rgba(0, 61, 91, 0.07);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.rt-photo:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(0, 61, 91, 0.14); }
+.rt-photo-img { aspect-ratio: 4/3; overflow: hidden; }
+.rt-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease); }
+.rt-photo:hover img { transform: scale(1.06); }
+.rt-photo figcaption { padding: 10px 12px 12px; font-size: 0.78rem; color: var(--ink); font-weight: 500; line-height: 1.4; }
+.rt-photo figcaption small { display: block; margin-top: 2px; font-weight: 600; color: var(--rt-accent, var(--blue-400)); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.68rem; }
+
+.rt-photo.big { grid-column: span 2; grid-row: span 2; }
+.rt-photo.big .rt-photo-img { aspect-ratio: 1/1; }
+.rt-photo.wide { grid-column: span 2; }
+.rt-photo.wide .rt-photo-img { aspect-ratio: 16/9; }
+
+@media (max-width: 900px) { .rt-gallery { grid-template-columns: repeat(2, 1fr); } .rt-photo.big, .rt-photo.wide { grid-column: span 2; } }
+@media (max-width: 560px) { .rt-gallery { grid-template-columns: 1fr; } .rt-photo.big, .rt-photo.wide { grid-column: span 1; } .rt-photo.big .rt-photo-img, .rt-photo.big { aspect-ratio: 4/3; } .rt-trip-head { gap: 10px; } }
+
+/* ---------- illustrated placeholder for a destination with no
+   photography yet — an emblem built from CSS/SVG rather than a
+   re-used or fabricated photograph. ---------- */
+.rt-showcase {
+  position: relative; overflow: hidden; text-align: center; border-radius: var(--radius-lg);
+  padding: clamp(48px, 7vw, 84px) clamp(24px, 5vw, 48px); margin-bottom: clamp(30px, 4vw, 40px);
+  background: linear-gradient(160deg, var(--rt-accent-dark, var(--blue)) 0%, var(--rt-accent, var(--blue-500)) 100%);
+  background-size: 200% 200%; animation: rsGradPan 26s ease infinite;
+  isolation: isolate;
+}
+@keyframes rsGradPan { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } }
+.rt-showcase::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.5; pointer-events: none;
+  background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 46px);
+}
+.rt-showcase-row { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: clamp(18px, 4vw, 40px); flex-wrap: wrap; margin-bottom: 22px; }
+.rt-showcase-ico {
+  width: clamp(58px, 8vw, 78px); height: clamp(58px, 8vw, 78px); border-radius: 50%;
+  display: grid; place-content: center; background: rgba(255,255,255,0.12); color: #fff;
+  border: 1px solid rgba(255,255,255,0.28);
+  animation: rtFloat 5s ease-in-out infinite;
+}
+.rt-showcase-ico:nth-child(2) { animation-delay: 0.6s; }
+.rt-showcase-ico:nth-child(3) { animation-delay: 1.2s; }
+@keyframes rtFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.rt-showcase-ico svg { width: 46%; height: 46%; }
+.rt-showcase p {
+  position: relative; z-index: 2; color: rgba(255,255,255,0.88); max-width: 54ch; margin-inline: auto;
+  font-size: 0.94rem; line-height: 1.7;
+}
+.rt-showcase strong { display: block; color: #fff; font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 8px; }
+
+/* ---------- closing "what these journeys build" tag row ---------- */
+.rt-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 900px; margin: 0 auto; }
+.rt-chip {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 600; color: var(--blue);
+  background: rgba(255, 198, 0, 0.14); border: 1px solid rgba(255, 198, 0, 0.34);
+  padding: 9px 18px; border-radius: 999px;
+}
+
+.rt-callout {
+  max-width: 780px; margin: clamp(28px, 4vw, 40px) auto 0; text-align: center;
+  padding: clamp(28px, 4vw, 40px) clamp(24px, 4vw, 36px); border-radius: 16px;
+  background: var(--paper); border: 1px solid var(--paper-2);
+}
+.rt-callout p { color: var(--blue); font-family: var(--font-display); font-size: clamp(1.02rem, 1.7vw, 1.2rem); line-height: 1.75; font-weight: 500; }
+
+/* ---------- lightbox (same generic pattern used elsewhere) ---------- */
+.rt-lightbox {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
+  background: rgba(1, 14, 22, 0.86); opacity: 0; visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease); padding: 20px;
+}
+.rt-lightbox.open { opacity: 1; visibility: visible; }
+.rt-lb-figure { position: relative; max-width: min(1000px, 92vw); max-height: 88vh; }
+.rt-lb-figure img { max-width: 100%; max-height: 80vh; display: block; border-radius: 10px; margin: 0 auto; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5); }
+.rt-lb-cap { color: #fff; text-align: center; margin-top: 14px; font-size: 0.92rem; }
+.rt-lb-cap span { display: block; margin-top: 3px; font-size: 0.78rem; color: rgba(255, 255, 255, 0.68); }
+.rt-lb-close {
+  position: absolute; top: -50px; right: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer;
+}
+.rt-lb-close:hover { background: var(--blue); }
+.rt-lb-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1); color: #fff; display: grid; place-content: center;
+  transition: 0.3s var(--ease); border: none; cursor: pointer; z-index: 4;
+}
+.rt-lb-btn:hover { background: var(--blue); }
+.rt-lb-btn.prev { left: -66px; }
+.rt-lb-btn.next { right: -66px; }
+@media (max-width: 1100px) {
+  .rt-lb-btn.prev { left: 6px; }
+  .rt-lb-btn.next { right: 6px; }
+  .rt-lb-btn { background: rgba(1, 14, 22, 0.55); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-showcase, .rt-showcase-ico { animation: none !important; }
+}

@@ -432,6 +432,7 @@
   initLightbox("#hfLightbox", ".hf-tile", "hf-lb");
   initLightbox("#ycLightbox", ".yc-photo", "yc-lb");
   initLightbox("#sfLightbox", ".sf-tile", "sf-lb");
+  initLightbox("#rtLightbox", ".rt-photo", "rt-lb");
 
   /* ---------- Events page: rising gold motes in the hero ---------- */
   const moteWrap = $(".ev-motes");
