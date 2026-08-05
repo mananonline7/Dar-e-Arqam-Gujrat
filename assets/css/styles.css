@@ -517,6 +517,15 @@ ul { list-style: none; }
    ========================================================= */
 .pillars { background: var(--white); }
 .pillar-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+.pillar-tab {
+  font-family: var(--font); font-size: 0.94rem; font-weight: 600; color: var(--blue);
+  background: var(--paper); border: 1px solid rgba(0, 61, 91, 0.12);
+  padding: 13px 28px; border-radius: 999px; cursor: pointer;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s, color 0.3s, border-color 0.3s;
+}
+.pillar-tab:hover { background: var(--paper-2); border-color: rgba(0, 61, 91, 0.2); transform: translateY(-2px); }
+.pillar-tab.active { color: var(--blue); background: var(--yellow); border-color: transparent; box-shadow: 0 10px 26px var(--yellow-glow); }
+.pillar-tab.active:hover { transform: translateY(-2px); }
 .pillar-block { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 64px); align-items: center; margin-bottom: 60px; }
 .pillar-block:last-child { margin-bottom: 0; }
 .pillar-block.reverse { direction: rtl; }
