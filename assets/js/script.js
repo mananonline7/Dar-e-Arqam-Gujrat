@@ -21,20 +21,30 @@
   const body = document.body;
   const toggle = $(".nav-toggle");
   const backdrop = $(".nav-backdrop");
-  const closeNav = () => body.classList.remove("nav-open");
+  const isMobileNav = () => window.matchMedia("(max-width: 760px)").matches;
+  const closeNav = () => {
+    body.classList.remove("nav-open");
+    $$(".nav-item.dropdown-open").forEach((item) => item.classList.remove("dropdown-open"));
+  };
   toggle && toggle.addEventListener("click", () => body.classList.toggle("nav-open"));
   backdrop && backdrop.addEventListener("click", closeNav);
-  $$(".nav a").forEach((a) => a.addEventListener("click", closeNav));
+  // Plain nav links (not dropdown triggers) close the mobile menu on tap.
+  // Dropdown triggers are handled separately below, since on mobile they
+  // toggle a submenu instead of navigating straight away.
+  $$(".nav > a").forEach((a) => a.addEventListener("click", closeNav));
+  $$(".dropdown-panel a").forEach((a) => a.addEventListener("click", closeNav));
 
-  /* ---------- Nav dropdowns (Academics / Facilities) ----------
-     CSS :hover already keeps the panel open via a zero-gap hit-area,
-     but a fast or diagonal mouse path can still outrun a pure-CSS
-     hover chain for an instant. This adds a small close delay on
-     top: entering the item OR its panel cancels any pending close;
-     leaving both starts a 200ms grace timer before it actually
-     hides. Trigger links keep navigating normally on click — this
-     only affects hover/keyboard-focus timing, nothing else. */
+  /* ---------- Nav dropdowns (Academics / Facilities / Extracurricular) ----------
+     Desktop: CSS :hover keeps the panel open via a zero-gap hit-area, but a
+     fast or diagonal mouse path can still outrun a pure-CSS hover chain for
+     an instant, so a small close-delay grace timer backs it up here.
+     Mobile (<=760px, no real hover): the trigger becomes a tap-to-toggle
+     accordion — the first tap expands its submenu instead of following the
+     link (the submenu's own links are real destinations), and tapping an
+     already-open trigger collapses it again. Only one submenu stays open
+     at a time. */
   $$(".nav-item").forEach((item) => {
+    const trigger = item.querySelector(":scope > a");
     let closeTimer = null;
     const open = () => {
       if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
@@ -44,11 +54,19 @@
       if (closeTimer) clearTimeout(closeTimer);
       closeTimer = setTimeout(() => item.classList.remove("dropdown-open"), 200);
     };
-    item.addEventListener("mouseenter", open);
-    item.addEventListener("mouseleave", scheduleClose);
-    item.addEventListener("focusin", open);
+    item.addEventListener("mouseenter", () => { if (!isMobileNav()) open(); });
+    item.addEventListener("mouseleave", () => { if (!isMobileNav()) scheduleClose(); });
+    item.addEventListener("focusin", () => { if (!isMobileNav()) open(); });
     item.addEventListener("focusout", (e) => {
-      if (!item.contains(e.relatedTarget)) scheduleClose();
+      if (!isMobileNav() && !item.contains(e.relatedTarget)) scheduleClose();
+    });
+
+    trigger && trigger.addEventListener("click", (e) => {
+      if (!isMobileNav()) return;
+      e.preventDefault();
+      const willOpen = !item.classList.contains("dropdown-open");
+      $$(".nav-item.dropdown-open").forEach((other) => { if (other !== item) other.classList.remove("dropdown-open"); });
+      item.classList.toggle("dropdown-open", willOpen);
     });
   });
 

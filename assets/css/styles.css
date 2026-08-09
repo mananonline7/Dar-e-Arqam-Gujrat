@@ -194,18 +194,37 @@ ul { list-style: none; }
 .dropdown-panel a::after { display: none; }
 .dropdown-panel a:hover { background: rgba(255,198,0,0.16); }
 
-@media (max-width: 760px) {
+/* ---------- Nav breakpoint ----------
+   The horizontal desktop nav (Home … Contact + Apply Now) needs
+   roughly 1160px of uninterrupted width to lay out without wrapping,
+   since nav links are intentionally nowrap. That's well past where
+   .nav-toggle used to appear (760px), leaving a broken "dead zone"
+   from ~761–1160px where the desktop nav rendered but its later
+   items (Admissions, Contact, Apply Now) were pushed off-screen with
+   no way to reach them. Rather than compress the desktop nav's own
+   sizing (which would change its look on real desktops), the mobile
+   hamburger pattern now simply covers that whole dead zone too —
+   every tablet and small-laptop width gets the tap-driven menu. */
+@media (max-width: 1300px) {
+  /* Mobile dropdowns are tap-driven accordions, not always-open hover
+     panels: collapsed by default (max-height:0), expanded only when
+     JS adds .dropdown-open (see script.js). This also keeps the
+     mobile menu's total height manageable so it fits (or scrolls
+     cleanly) inside the viewport instead of overflowing off-screen. */
   .nav-item { display: flex; flex-direction: column; align-items: stretch; width: 100%; }
-  .nav-caret { display: none; }
+  .nav-item > a { justify-content: space-between; }
+  .nav-caret { display: block; }
   .dropdown-menu {
-    position: static; opacity: 1; visibility: visible; pointer-events: auto; padding-top: 0;
+    position: static; left: auto; transform: none; opacity: 1; visibility: visible; pointer-events: auto; padding-top: 0;
+    max-height: 0; overflow: hidden; transition: max-height 0.35s var(--ease);
   }
+  .nav-item.dropdown-open .dropdown-menu { max-height: 600px; }
   .dropdown-panel {
     position: static; background: transparent; box-shadow: none; border: none;
     padding: 0 0 4px 20px; margin-top: 2px; transform: none;
   }
   .dropdown-panel::before { display: none; }
-  .nav .nav-item .dropdown-panel a { color: rgba(255,255,255,0.82); padding: 9px 10px; font-size: 0.98rem; }
+  .nav .nav-item .dropdown-panel a { color: rgba(255,255,255,0.82); padding: 12px 10px; font-size: 0.98rem; }
   .dropdown-panel a:hover { background: rgba(255,255,255,0.08); }
 }
 
@@ -627,21 +646,25 @@ ul { list-style: none; }
   .history-media { margin-bottom: 40px; }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1300px) {
   :root { --header-h: 70px; }
   .nav, .header-cta .btn { display: none; }
   .nav-toggle { display: block; }
   .nav {
-    position: fixed; inset: 0 0 0 auto; width: min(320px, 84vw); height: 100vh;
-    background: var(--blue); flex-direction: column; align-items: stretch; justify-content: center;
-    gap: 6px; padding: 40px 26px; transform: translateX(100%); transition: transform 0.45s var(--ease);
+    position: fixed; inset: 0 0 0 auto; width: min(320px, 84vw); height: 100vh; height: 100dvh;
+    background: var(--blue); flex-direction: column; align-items: stretch; justify-content: flex-start;
+    gap: 6px; padding: calc(var(--header-h) + 16px) 20px 24px; transform: translateX(100%); transition: transform 0.45s var(--ease);
     box-shadow: -20px 0 60px rgba(0,0,0,0.3); z-index: 110;
+    overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   }
   .nav-open .nav { display: flex; transform: translateX(0); }
-  .nav a { color: #fff; font-size: 1.1rem; padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .nav a { color: #fff; font-size: 1.05rem; padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); min-height: 44px; display: flex; align-items: center; }
   .nav a::after { display: none; }
   .nav-backdrop { position: fixed; inset: 0; background: rgba(0,20,32,0.5); opacity: 0; visibility: hidden; transition: 0.4s; z-index: 105; }
   .nav-open .nav-backdrop { opacity: 1; visibility: visible; }
+}
+
+@media (max-width: 760px) {
   .values-grid, .dist-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 30px; }
   .timeline-track { flex-direction: column; gap: 22px; }
@@ -651,6 +674,17 @@ ul { list-style: none; }
   .tl-tip { left: 30px; bottom: auto; top: -6px; transform: translateX(0); }
   .hero-actions .btn, .cta-actions .btn { flex: 1 1 100%; justify-content: center; }
   .history-media .m-sub { position: static; width: 60%; margin: 16px auto 0; }
+  /* safety net: .btn is nowrap by design (desktop labels are short
+     enough to fit), but a handful of longer labels ("View All 22
+     Campuses in Detail") can overflow narrow phones — let those wrap
+     instead of pushing the page wider than the viewport */
+  .btn { white-space: normal; text-align: center; max-width: 100%; }
+  /* the diagonal wedge is a fixed 90px tall shape; the section's own
+     top padding never drops below 64px (see .section clamp), so on
+     mobile the wedge must shrink or it cuts into the section-head
+     content sitting right below it */
+  .distinct::before { height: 44px; }
+  .distinct::after { width: 260px; height: 260px; right: -100px; bottom: -100px; }
 }
 
 @media (max-width: 420px) {
@@ -1268,7 +1302,7 @@ ul { list-style: none; }
   font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; display: grid; place-content: center;
   box-shadow: var(--shadow-sm); position: relative; z-index: 1;
 }
-.formality-step .fs-body { padding-top: 8px; }
+.formality-step .fs-body { padding-top: 8px; min-width: 0; }
 .formality-step h3 { font-family: var(--font-display); color: var(--blue); font-size: 1.15rem; margin-bottom: 8px; font-weight: 600; }
 .formality-step p { color: var(--muted); font-size: 0.95rem; }
 .formality-step ul { margin-top: 10px; }
