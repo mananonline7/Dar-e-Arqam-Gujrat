@@ -664,13 +664,25 @@ ul { list-style: none; }
     background: var(--blue); flex-direction: column; align-items: stretch; justify-content: flex-start;
     gap: 6px; padding: calc(var(--header-h) + 16px) 20px 24px; transform: translateX(100%); visibility: hidden;
     transition: transform 0.45s var(--ease), visibility 0s linear 0.45s;
-    box-shadow: -20px 0 60px rgba(0,0,0,0.3); z-index: 110;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.3); z-index: 110; pointer-events: auto;
     overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   }
   .nav-open .nav { transform: translateX(0); visibility: visible; transition: transform 0.45s var(--ease); }
   .nav a { color: #fff; font-size: 1.05rem; padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); min-height: 44px; display: flex; align-items: center; }
   .nav a::after { display: none; }
-  .nav-backdrop { position: fixed; inset: 0; background: rgba(0,20,32,0.5); opacity: 0; visibility: hidden; transition: 0.4s; z-index: 105; }
+  /* .nav-backdrop must stay BELOW .site-header (z-index:100) in the root
+     stacking context, not just below .nav's own z-index:110. .nav is a
+     descendant of .site-header, which is itself position:fixed with a
+     z-index, so it forms its own stacking context — .nav's z-index:110
+     only ranks it among *other children of the header*, it can't escape
+     upward past a sibling that outranks the header itself. With the old
+     z-index:105 (> the header's 100), the backdrop painted, and hit-
+     tested, on top of the entire header including the open sidebar, so
+     every tap - even directly on a menu link - landed on the backdrop
+     and closed the menu instead of reaching the link underneath. 95
+     keeps it under the header while still sitting above ordinary page
+     content to dim it. */
+  .nav-backdrop { position: fixed; inset: 0; background: rgba(0,20,32,0.5); opacity: 0; visibility: hidden; transition: 0.4s; z-index: 95; }
   .nav-open .nav-backdrop { opacity: 1; visibility: visible; }
 }
 

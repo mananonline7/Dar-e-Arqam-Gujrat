@@ -36,7 +36,14 @@
   // which isn't perceptible.
   const closeNavDeferred = () => { setTimeout(closeNav, 0); };
   toggle && toggle.addEventListener("click", () => body.classList.toggle("nav-open"));
-  backdrop && backdrop.addEventListener("click", closeNav);
+  // Explicit close (never a toggle) so a stray bubbled event can't
+  // accidentally reopen the menu. The backdrop is its own dedicated
+  // element behind the sidebar (see styles.css) rather than a full-
+  // screen catch-all, so in normal operation only a tap that actually
+  // lands on it — i.e. outside the sidebar — reaches this handler; the
+  // e.target check is a second guard against ever closing on a tap that
+  // merely bubbled up through the backdrop from something else.
+  backdrop && backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeNav(); });
   // Plain nav links (not dropdown triggers) close the mobile menu on tap.
   // Dropdown triggers are handled separately below, since on mobile they
   // toggle a submenu instead of navigating straight away.
