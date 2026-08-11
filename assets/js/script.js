@@ -21,7 +21,7 @@
   const body = document.body;
   const toggle = $(".nav-toggle");
   const backdrop = $(".nav-backdrop");
-  const isMobileNav = () => window.matchMedia("(max-width: 760px)").matches;
+  const isMobileNav = () => window.matchMedia("(max-width: 1300px)").matches;
   const closeNav = () => {
     body.classList.remove("nav-open");
     $$(".nav-item.dropdown-open").forEach((item) => item.classList.remove("dropdown-open"));
@@ -38,7 +38,7 @@
      Desktop: CSS :hover keeps the panel open via a zero-gap hit-area, but a
      fast or diagonal mouse path can still outrun a pure-CSS hover chain for
      an instant, so a small close-delay grace timer backs it up here.
-     Mobile (<=760px, no real hover): the trigger becomes a tap-to-toggle
+     Mobile (<=1300px, no real hover): the trigger becomes a tap-to-toggle
      accordion — the first tap expands its submenu instead of following the
      link (the submenu's own links are real destinations), and tapping an
      already-open trigger collapses it again. Only one submenu stays open
