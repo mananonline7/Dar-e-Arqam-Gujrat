@@ -26,13 +26,22 @@
     body.classList.remove("nav-open");
     $$(".nav-item.dropdown-open").forEach((item) => item.classList.remove("dropdown-open"));
   };
+  // Belt-and-braces alongside the CSS visibility-delay fix in styles.css:
+  // removing .nav-open changes the panel's box/paint state immediately,
+  // and doing that synchronously inside a link's own click handler risks
+  // racing that same click's default navigation in some browsers — the
+  // menu flashes shut and the page just... stays put. Deferring the close
+  // by a tick lets the browser dispatch the navigation first; nav links
+  // to the same page (anchors) still close the menu, just a beat later,
+  // which isn't perceptible.
+  const closeNavDeferred = () => { setTimeout(closeNav, 0); };
   toggle && toggle.addEventListener("click", () => body.classList.toggle("nav-open"));
   backdrop && backdrop.addEventListener("click", closeNav);
   // Plain nav links (not dropdown triggers) close the mobile menu on tap.
   // Dropdown triggers are handled separately below, since on mobile they
   // toggle a submenu instead of navigating straight away.
-  $$(".nav > a").forEach((a) => a.addEventListener("click", closeNav));
-  $$(".dropdown-panel a").forEach((a) => a.addEventListener("click", closeNav));
+  $$(".nav > a").forEach((a) => a.addEventListener("click", closeNavDeferred));
+  $$(".dropdown-panel a").forEach((a) => a.addEventListener("click", closeNavDeferred));
 
   /* ---------- Nav dropdowns (Academics / Facilities / Extracurricular) ----------
      Desktop: CSS :hover keeps the panel open via a zero-gap hit-area, but a

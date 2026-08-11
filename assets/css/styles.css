@@ -648,16 +648,26 @@ ul { list-style: none; }
 
 @media (max-width: 1300px) {
   :root { --header-h: 70px; }
-  .nav, .header-cta .btn { display: none; }
+  .header-cta .btn { display: none; }
   .nav-toggle { display: block; }
+  /* Closed state uses visibility (not display:none) so the slide-out
+     transition actually plays instead of vanishing instantly, and so a
+     tap on a nav link isn't racing an ancestor's display flipping to
+     none — some browsers cancel a click's own pending navigation if the
+     link gets un-rendered before the default action fires, which read
+     as "the menu just closes and nothing happens." The visibility
+     change is delayed until the slide-out transition finishes so the
+     panel stays interactive/visible throughout its own closing
+     animation, then becomes truly inert. */
   .nav {
-    position: fixed; inset: 0 0 0 auto; width: min(320px, 84vw); height: 100vh; height: 100dvh;
+    display: flex; position: fixed; inset: 0 0 0 auto; width: min(320px, 84vw); height: 100vh; height: 100dvh;
     background: var(--blue); flex-direction: column; align-items: stretch; justify-content: flex-start;
-    gap: 6px; padding: calc(var(--header-h) + 16px) 20px 24px; transform: translateX(100%); transition: transform 0.45s var(--ease);
+    gap: 6px; padding: calc(var(--header-h) + 16px) 20px 24px; transform: translateX(100%); visibility: hidden;
+    transition: transform 0.45s var(--ease), visibility 0s linear 0.45s;
     box-shadow: -20px 0 60px rgba(0,0,0,0.3); z-index: 110;
     overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   }
-  .nav-open .nav { display: flex; transform: translateX(0); }
+  .nav-open .nav { transform: translateX(0); visibility: visible; transition: transform 0.45s var(--ease); }
   .nav a { color: #fff; font-size: 1.05rem; padding: 14px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); min-height: 44px; display: flex; align-items: center; }
   .nav a::after { display: none; }
   .nav-backdrop { position: fixed; inset: 0; background: rgba(0,20,32,0.5); opacity: 0; visibility: hidden; transition: 0.4s; z-index: 105; }
