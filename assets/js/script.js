@@ -519,3 +519,63 @@
     sections.forEach((s) => sio.observe(s));
   }
 })();
+
+/* =========================================================
+   Admissions popup — shows once per browser session, after
+   the page finishes loading, on whichever page starts the
+   session (this file is shared across every page).
+   ========================================================= */
+(function () {
+  "use strict";
+  const STORAGE_KEY = "dasPopupShown";
+  if (sessionStorage.getItem(STORAGE_KEY)) return;
+
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay";
+  overlay.setAttribute("aria-hidden", "true");
+  overlay.innerHTML =
+    '<div class="popup-modal" role="dialog" aria-modal="true" aria-label="Admissions announcement" tabindex="-1">' +
+      '<button type="button" class="popup-close" aria-label="Close">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+      '</button>' +
+      '<img src="assets/img/popup-admissions.jpg" alt="Dar-e-Arqam Schools admissions open 2026-27 — PG to 9th, PG to O-Level, Shoba Hifz. Apply now." />' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  const modal = overlay.querySelector(".popup-modal");
+  const closeBtn = overlay.querySelector(".popup-close");
+  let lastFocused = null;
+
+  const onKeydown = (e) => {
+    if (e.key === "Escape") { closePopup(); return; }
+    if (e.key === "Tab") {
+      // Only one focusable element in this dialog — keep focus pinned to it.
+      e.preventDefault();
+      closeBtn.focus();
+    }
+  };
+
+  function closePopup() {
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("popup-lock");
+    document.removeEventListener("keydown", onKeydown);
+    if (lastFocused) lastFocused.focus();
+  }
+
+  function openPopup() {
+    lastFocused = document.activeElement;
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.classList.add("popup-lock");
+    modal.focus();
+    document.addEventListener("keydown", onKeydown);
+    sessionStorage.setItem(STORAGE_KEY, "1");
+  }
+
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) closePopup(); });
+  closeBtn.addEventListener("click", closePopup);
+
+  if (document.readyState === "complete") openPopup();
+  else window.addEventListener("load", openPopup);
+})();
