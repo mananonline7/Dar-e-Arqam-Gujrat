@@ -579,3 +579,23 @@
   if (document.readyState === "complete") openPopup();
   else window.addEventListener("load", openPopup);
 })();
+
+/* =========================================================
+   Floating WhatsApp button — built here (rather than marked
+   up on every page) so the shared script gives every page the
+   same fixed, bottom-right chat link automatically.
+   ========================================================= */
+(function () {
+  "use strict";
+  const fab = document.createElement("a");
+  fab.className = "whatsapp-fab";
+  fab.href = "https://wa.me/923000347034";
+  fab.target = "_blank";
+  fab.rel = "noopener noreferrer";
+  fab.setAttribute("aria-label", "Chat with us on WhatsApp");
+  fab.innerHTML =
+    '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">' +
+      '<path d="M16.004 3C9.377 3 4 8.373 4 15c0 2.386.694 4.61 1.885 6.487L4 29l7.72-1.844A11.94 11.94 0 0 0 16.004 27C22.63 27 28 21.627 28 15S22.63 3 16.004 3zm0 21.7c-1.95 0-3.76-.55-5.3-1.5l-.38-.22-4.58 1.095 1.12-4.46-.25-.4A9.63 9.63 0 0 1 5.3 15c0-5.35 4.36-9.7 9.7-9.7 5.35 0 9.7 4.35 9.7 9.7 0 5.35-4.35 9.7-9.7 9.7zm5.32-7.26c-.29-.145-1.71-.845-1.975-.94-.265-.095-.46-.145-.65.145-.19.29-.745.94-.915 1.135-.17.19-.335.215-.625.07-.29-.145-1.225-.45-2.33-1.435-.86-.765-1.44-1.71-1.61-2-.17-.29-.02-.445.13-.59.13-.13.29-.335.435-.505.145-.17.19-.29.29-.485.095-.19.05-.36-.025-.505-.075-.145-.65-1.565-.89-2.145-.235-.565-.475-.49-.65-.5-.17-.01-.36-.01-.55-.01s-.505.07-.77.36c-.265.29-1 1-1 2.435 0 1.435 1.02 2.82 1.165 3.015.145.19 2 3.055 4.85 4.285.68.295 1.21.47 1.62.6.68.215 1.3.185 1.79.11.545-.08 1.71-.7 1.95-1.375.24-.675.24-1.255.17-1.375-.07-.12-.265-.195-.555-.34z"/>' +
+    '</svg>';
+  document.body.appendChild(fab);
+})();
